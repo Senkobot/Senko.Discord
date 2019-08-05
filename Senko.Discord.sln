@@ -1,0 +1,54 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29123.88
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senko.Discord", "src\Senko.Discord\Senko.Discord.csproj", "{15CB5CF8-EE75-47CA-B07D-1EB505BDC397}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senko.Discord.Core", "src\Senko.Discord.Core\Senko.Discord.Core.csproj", "{9BBA3AEE-A3E0-4F07-B74D-EADB73CDBEBA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senko.Discord.Gateway", "src\Senko.Discord.Gateway\Senko.Discord.Gateway.csproj", "{E9DBC329-8573-4119-8EFE-3E9EF4E47962}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Senko.Discord.Rest", "src\Senko.Discord.Rest\Senko.Discord.Rest.csproj", "{063908F5-4322-4B58-8B55-EDEA506B5C8A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Senko.Discord.Example", "examples\Senko.Discord.Example\Senko.Discord.Example.csproj", "{D84D97E7-932F-4EE0-9B66-7A9285AA953F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Examples", "Examples", "{F19535D7-2DAB-4858-A9ED-EA723A167E48}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{15CB5CF8-EE75-47CA-B07D-1EB505BDC397}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15CB5CF8-EE75-47CA-B07D-1EB505BDC397}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15CB5CF8-EE75-47CA-B07D-1EB505BDC397}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15CB5CF8-EE75-47CA-B07D-1EB505BDC397}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9BBA3AEE-A3E0-4F07-B74D-EADB73CDBEBA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9BBA3AEE-A3E0-4F07-B74D-EADB73CDBEBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9BBA3AEE-A3E0-4F07-B74D-EADB73CDBEBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9BBA3AEE-A3E0-4F07-B74D-EADB73CDBEBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9DBC329-8573-4119-8EFE-3E9EF4E47962}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9DBC329-8573-4119-8EFE-3E9EF4E47962}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9DBC329-8573-4119-8EFE-3E9EF4E47962}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9DBC329-8573-4119-8EFE-3E9EF4E47962}.Release|Any CPU.Build.0 = Release|Any CPU
+		{063908F5-4322-4B58-8B55-EDEA506B5C8A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{063908F5-4322-4B58-8B55-EDEA506B5C8A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{063908F5-4322-4B58-8B55-EDEA506B5C8A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{063908F5-4322-4B58-8B55-EDEA506B5C8A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D84D97E7-932F-4EE0-9B66-7A9285AA953F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D84D97E7-932F-4EE0-9B66-7A9285AA953F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D84D97E7-932F-4EE0-9B66-7A9285AA953F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D84D97E7-932F-4EE0-9B66-7A9285AA953F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D84D97E7-932F-4EE0-9B66-7A9285AA953F} = {F19535D7-2DAB-4858-A9ED-EA723A167E48}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {CA91F71E-DB66-492B-8005-3AD4AA77EFFA}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,32 @@
+# TODO: Set-up NuGet for releases.
+
+name: Senko.Discord
+
+trigger:
+- develop
+
+pool:
+  vmImage: 'windows-latest'
+
+variables:
+  buildConfiguration: 'Release'
+
+steps:
+- script: dotnet restore
+  displayName: dotnet restore
+
+- script: dotnet build --configuration $(buildConfiguration) --no-restore
+  displayName: build
+
+- script: dotnet pack --configuration $(buildConfiguration) --no-build --output %Build_ArtifactStagingDirectory%
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'develop'))
+  displayName: pack
+
+- task: NuGetCommand@2
+  displayName: publish
+  condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'develop'))
+  inputs:
+    command: push
+    nuGetFeedType: external
+    publishFeedCredentials: 'MyGet'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
