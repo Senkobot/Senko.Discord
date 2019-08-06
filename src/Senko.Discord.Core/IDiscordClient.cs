@@ -17,6 +17,8 @@ namespace Senko.Discord
 
         IDiscordGateway Gateway { get; }
 
+        ulong? CurrentUserId { get; set; }
+
         Task<IDiscordTextChannel> CreateDMAsync(ulong userid);
 
         Task<IDiscordRole> CreateRoleAsync(ulong guildId, CreateRoleArgs args = null);

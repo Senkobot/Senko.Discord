@@ -13,32 +13,17 @@ namespace Senko.Discord
 {
 	public abstract class BaseDiscordClient : IDiscordClient
     {
-        private readonly IServiceProvider _provider;
-        private IDiscordEventHandler _eventHandler;
-
-        public IDiscordEventHandler EventHandler => _eventHandler ??= _provider.GetRequiredService<IDiscordEventHandler>();
+        protected BaseDiscordClient(IDiscordApiClient apiClient, IDiscordGateway gateway)
+		{
+            ApiClient = apiClient;
+			Gateway = gateway;
+        }
 
         public IDiscordApiClient ApiClient { get; }
 
         public IDiscordGateway Gateway { get; }
 
-		protected BaseDiscordClient(IDiscordApiClient apiClient, IDiscordGateway gateway, IServiceProvider provider)
-		{
-            _provider = provider;
-            ApiClient = apiClient;
-			Gateway = gateway;
-
-            Gateway.OnMessageCreate += OnMessageCreate;
-			Gateway.OnMessageUpdate += OnMessageUpdate;
-
-			Gateway.OnGuildCreate += OnGuildJoin;
-			Gateway.OnGuildDelete += OnGuildLeave;
-
-			Gateway.OnGuildMemberAdd += OnGuildMemberCreate;
-			Gateway.OnGuildMemberRemove += OnGuildMemberDelete;
-
-			Gateway.OnUserUpdate += OnUserUpdate;
-        }
+        public ulong? CurrentUserId { get; set; }
 
         public Task StartAsync()
             => Gateway.StartAsync();
@@ -244,71 +229,8 @@ namespace Senko.Discord
             }
 		}
 
-        private async Task OnGuildMemberDelete(ulong guildId, DiscordUserPacket packet)
-        {
-            var lastPacket = await GetGuildMemberPacketAsync(packet.Id, guildId);
-            var member = new DiscordGuildUser(lastPacket, this);
-
-            await EventHandler.OnGuildMemberDelete(member);
-        }
-
-        private Task OnGuildMemberCreate(DiscordGuildMemberPacket packet)
-        {
-            var member = new DiscordGuildUser(packet, this);
-
-            return EventHandler.OnGuildMemberCreate(member);
-        }
-
-        private Task OnMessageCreate(DiscordMessagePacket packet)
-        {
-            var message = new DiscordMessage(packet, this);
-
-            return EventHandler.OnMessageCreate(message);
-        }
-
-        private Task OnMessageUpdate(DiscordMessagePacket packet)
-        {
-            var message = new DiscordMessage(packet, this);
-
-            return EventHandler.OnMessageUpdate(message);
-        }
-
-        private Task OnGuildJoin(DiscordGuildPacket packet)
-        {
-            var guild = new DiscordGuild(packet, this);
-
-            return EventHandler.OnGuildJoin(guild);
-        }
-
-        private Task OnGuildLeave(DiscordGuildUnavailablePacket packet)
-        {
-            if (packet.IsUnavailable.GetValueOrDefault(false))
-            {
-                return EventHandler.OnGuildUnavailable(packet.GuildId);
-            }
-
-            return EventHandler.OnGuildLeave(packet.GuildId);
-        }
-
-        private Task OnUserUpdate(DiscordUserPacket packet)
-        {
-            var user = new DiscordUser(packet, this);
-
-            return EventHandler.OnUserUpdate(user);
-        }
-
         public virtual void Dispose()
         {
-            Gateway.OnMessageCreate -= OnMessageCreate;
-            Gateway.OnMessageUpdate -= OnMessageUpdate;
-
-            Gateway.OnGuildCreate -= OnGuildJoin;
-            Gateway.OnGuildDelete -= OnGuildLeave;
-
-            Gateway.OnGuildMemberAdd -= OnGuildMemberCreate;
-            Gateway.OnGuildMemberRemove -= OnGuildMemberDelete;
-
-            Gateway.OnUserUpdate -= OnUserUpdate;
         }
     }
 }

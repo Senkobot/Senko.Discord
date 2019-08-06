@@ -10,24 +10,22 @@ namespace Senko.Discord
 {
     public static class ServiceExtensions
     {
-        public static IServiceCollection AddDiscord<THandler>(this IServiceCollection services, Action<DiscordOptions> configureOptions)
-            where THandler : class, IDiscordEventHandler
+        public static IServiceCollection AddDiscord(this IServiceCollection services, Action<DiscordOptions> configureOptions)
         {
-            AddDiscord<THandler>(services);
+            AddDiscord(services);
             services.Configure(configureOptions);
             return services;
         }
 
-        public static IServiceCollection AddDiscord<THandler>(this IServiceCollection services)
-            where THandler : class, IDiscordEventHandler
+        public static IServiceCollection AddDiscord(this IServiceCollection services)
         {
-            services.AddSingleton<IDiscordEventHandler, THandler>();
             services.AddSingleton<IDiscordClient, DiscordClient>();
 
             services.AddSingleton<IDiscordApiClient, DiscordApiClient>();
             services.AddSingleton<IDiscordApiRateLimiter, DiscordApiRateLimiter>();
 
             services.AddSingleton<IDiscordGateway, GatewayCluster>();
+            services.AddSingleton<IDiscordPacketHandler, DiscordPacketHandler>();
             services.AddTransient<IDiscordConnectionRatelimiter, DiscordConnectionRatelimiter>();
 
             return services;

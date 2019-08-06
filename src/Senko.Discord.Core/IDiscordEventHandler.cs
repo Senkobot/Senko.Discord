@@ -17,10 +17,12 @@ namespace Senko.Discord
 
         Task OnGuildMemberDelete(IDiscordGuildUser member);
 
-        Task OnGuildMemberCreate(IDiscordUser member);
+        Task OnGuildMemberCreate(IDiscordGuildUser member);
 
         Task OnMessageCreate(IDiscordMessage message);
 
         Task OnMessageUpdate(IDiscordMessage message);
+
+        Task OnGuildMemberRolesUpdate(IDiscordGuildUser member);
     }
 }

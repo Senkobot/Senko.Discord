@@ -15,10 +15,12 @@ namespace Senko.Discord.Gateway
 		private readonly CancellationTokenSource _tokenSource;
 		private bool _isRunning;
         private readonly ILogger<GatewayShard> _logger;
+        private readonly IDiscordPacketHandler _packetHandler;
 
         public GatewayShard(DiscordOptions configuration, IServiceProvider provider, int shardId = 0)
         {
             ShardId = shardId;
+            _packetHandler = provider.GetRequiredService<IDiscordPacketHandler>();
             _logger = provider.GetRequiredService<ILogger<GatewayShard>>();
             _tokenSource = new CancellationTokenSource();
 			_connection = new GatewayConnection(configuration, provider, ShardId);
@@ -73,70 +75,70 @@ namespace Senko.Discord.Gateway
             switch (identifier.EventName)
             {
                 case "MESSAGE_CREATE":
-                    return Dispatch(OnMessageCreate, data);
+                    return _packetHandler.OnMessageCreate(Deserialize<DiscordMessagePacket>(data));
 
                 case "TYPING_START":
-                    return Dispatch(OnTypingStart, data);
+                    return _packetHandler.OnTypingStart(Deserialize<TypingStartEventArgs>(data));
 
                 case "PRESENCE_UPDATE":
-                    return Dispatch(OnPresenceUpdate, data);
+                    return _packetHandler.OnPresenceUpdate(Deserialize<DiscordPresencePacket>(data));
 
                 case "MESSAGE_UPDATE":
-                    return Dispatch(OnMessageUpdate, data);
+                    return _packetHandler.OnMessageUpdate(Deserialize<DiscordMessagePacket>(data));
 
                 case "MESSAGE_DELETE":
-                    return Dispatch(OnMessageDelete, data);
+                    return _packetHandler.OnMessageDelete(Deserialize<MessageDeleteArgs>(data));
 
                 case "GUILD_MEMBER_ADD":
-                    return Dispatch(OnGuildMemberAdd, data);
+                    return _packetHandler.OnGuildMemberAdd(Deserialize<DiscordGuildMemberPacket>(data));
 
                 case "GUILD_MEMBER_UPDATE":
-                    return Dispatch(OnGuildMemberUpdate, data);
+                    return _packetHandler.OnGuildMemberUpdate(Deserialize<GuildMemberUpdateEventArgs>(data));
 
                 case "MESSAGE_DELETE_BULK":
-                    return Dispatch(OnMessageDeleteBulk, data);
+                    return _packetHandler.OnMessageDeleteBulk(Deserialize<MessageBulkDeleteEventArgs>(data));
 
                 case "GUILD_EMOJIS_UPDATE":
-                    return Dispatch<GuildEmojisUpdateEventArgs>(packet => OnGuildEmojiUpdate.InvokeAsync(packet.GuildId, packet.Emojis), data);
+                    return _packetHandler.OnGuildEmojiUpdate(Deserialize<GuildEmojisUpdateEventArgs>(data));
 
                 case "GUILD_MEMBER_REMOVE":
-                    return Dispatch<GuildIdUserArgs>(packet => OnGuildMemberRemove.InvokeAsync(packet.GuildId, packet.User), data);
+                    return _packetHandler.OnGuildMemberRemove(Deserialize<GuildIdUserArgs>(data));
 
                 case "GUILD_BAN_ADD":
-                    return Dispatch<GuildIdUserArgs>(packet => OnGuildBanAdd.InvokeAsync(packet.GuildId, packet.User), data);
+                    return _packetHandler.OnGuildBanAdd(Deserialize<GuildIdUserArgs>(data));
 
                 case "GUILD_BAN_REMOVE":
-                    return Dispatch<GuildIdUserArgs>(packet => OnGuildBanRemove.InvokeAsync(packet.GuildId, packet.User), data);
+                    return _packetHandler.OnGuildBanRemove(Deserialize<GuildIdUserArgs>(data));
 
                 case "GUILD_CREATE":
-                    return Dispatch(OnGuildCreate, data);
+                    return _packetHandler.OnGuildCreate(Deserialize<DiscordGuildPacket>(data));
 
                 case "GUILD_ROLE_CREATE":
-                    return Dispatch<RoleEventArgs>(packet => OnGuildRoleCreate.InvokeAsync(packet.GuildId, packet.Role), data);
+                    return _packetHandler.OnGuildRoleCreate(Deserialize<RoleEventArgs>(data));
 
                 case "GUILD_ROLE_UPDATE":
-                    return Dispatch<RoleEventArgs>(packet => OnGuildRoleUpdate.InvokeAsync(packet.GuildId, packet.Role), data);
+                    return _packetHandler.OnGuildRoleUpdate(Deserialize<RoleEventArgs>(data));
 
                 case "GUILD_ROLE_DELETE":
-                    return Dispatch<RoleDeleteEventArgs>(packet => OnGuildRoleDelete.InvokeAsync(packet.GuildId, packet.RoleId), data);
+                    return _packetHandler.OnGuildRoleDelete(Deserialize<RoleDeleteEventArgs>(data));
 
                 case "GUILD_UPDATE":
-                    return Dispatch(OnGuildUpdate, data);
+                    return _packetHandler.OnGuildUpdate(Deserialize<DiscordGuildPacket>(data));
 
                 case "GUILD_DELETE":
-                    return Dispatch(OnGuildDelete, data);
+                    return _packetHandler.OnGuildDelete(Deserialize<DiscordGuildUnavailablePacket>(data));
 
                 case "CHANNEL_CREATE":
-                    return Dispatch(OnChannelCreate, data);
+                    return _packetHandler.OnChannelCreate(Deserialize<DiscordChannelPacket>(data));
 
                 case "CHANNEL_UPDATE":
-                    return Dispatch(OnChannelUpdate, data);
+                    return _packetHandler.OnChannelUpdate(Deserialize<DiscordChannelPacket>(data));
 
                 case "CHANNEL_DELETE":
-                    return Dispatch(OnChannelDelete, data);
+                    return _packetHandler.OnChannelDelete(Deserialize<DiscordChannelPacket>(data));
 
                 case "USER_UPDATE":
-                    return Dispatch(OnUserUpdate, data);
+                    return _packetHandler.OnUserUpdate(Deserialize<DiscordUserPacket>(data));
 
                 case "READY":
                 {
@@ -144,14 +146,14 @@ namespace Senko.Discord.Gateway
                     TraceServers = packet.TraceGuilds;
                     _connection.SessionId = packet.SessionId;
                     _logger.LogInformation($"Shard {packet.CurrentShard} is ready.");
-                    return OnReady.InvokeAsync(packet);
+                    return _packetHandler.OnReady(packet);
                 }
 
                 case "RESUMED":
                 {
                     var packet = JsonHelper.Deserialize<GatewayMessage<GatewayReadyPacket>>(data.Span).Data;
                     TraceServers = packet.TraceGuilds;
-                    return OnResume.InvokeAsync(packet);
+                    return _packetHandler.OnResume(packet);
                 }
 
                 case "PRESENCES_REPLACE":
@@ -164,11 +166,11 @@ namespace Senko.Discord.Gateway
         }
 
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private Task Dispatch<T>(Func<T, Task> func, ReadOnlyMemory<byte> data)
+        private T Deserialize<T>(ReadOnlyMemory<byte> data)
         {
             var packet = JsonHelper.Deserialize<GatewayMessage<T>>(data.Span);
             _connection.SequenceNumber = packet.SequenceNumber;
-            return func.InvokeAsync(packet.Data);
+            return packet.Data;
         }
 
 		public Task SendAsync(int shardId, GatewayOpcode opCode, object payload)
@@ -185,33 +187,5 @@ namespace Senko.Discord.Gateway
 		{
 			_tokenSource.Dispose();
 		}
-
-		#region Events
-
-        public event Func<DiscordChannelPacket, Task> OnChannelCreate;
-        public event Func<DiscordChannelPacket, Task> OnChannelUpdate;
-        public event Func<DiscordChannelPacket, Task> OnChannelDelete;
-        public event Func<DiscordGuildPacket, Task> OnGuildCreate;
-        public event Func<DiscordGuildPacket, Task> OnGuildUpdate;
-        public event Func<DiscordGuildUnavailablePacket, Task> OnGuildDelete;
-        public event Func<DiscordGuildMemberPacket, Task> OnGuildMemberAdd;
-        public event Func<ulong, DiscordUserPacket, Task> OnGuildMemberRemove;
-        public event Func<GuildMemberUpdateEventArgs, Task> OnGuildMemberUpdate;
-        public event Func<ulong, DiscordUserPacket, Task> OnGuildBanAdd;
-        public event Func<ulong, DiscordUserPacket, Task> OnGuildBanRemove;
-        public event Func<ulong, DiscordEmoji[], Task> OnGuildEmojiUpdate;
-        public event Func<ulong, DiscordRolePacket, Task> OnGuildRoleCreate;
-        public event Func<ulong, DiscordRolePacket, Task> OnGuildRoleUpdate;
-        public event Func<ulong, ulong, Task> OnGuildRoleDelete;
-        public event Func<DiscordMessagePacket, Task> OnMessageCreate;
-        public event Func<DiscordMessagePacket, Task> OnMessageUpdate;
-        public event Func<MessageDeleteArgs, Task> OnMessageDelete;
-        public event Func<MessageBulkDeleteEventArgs, Task> OnMessageDeleteBulk;
-        public event Func<DiscordPresencePacket, Task> OnPresenceUpdate;
-        public event Func<GatewayReadyPacket, Task> OnReady;
-        public event Func<GatewayReadyPacket, Task> OnResume;
-        public event Func<TypingStartEventArgs, Task> OnTypingStart;
-        public event Func<DiscordUserPacket, Task> OnUserUpdate;
-        #endregion Events
     }
 }

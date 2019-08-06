@@ -33,8 +33,9 @@ namespace Senko.Discord.Example
             var services = new ServiceCollection();
 
             services.AddSingleton<ICacheClient, InMemoryCacheClient>();
+            services.AddSingleton<IDiscordEventHandler, DiscordEventHandler>();
 
-            services.AddDiscord<DiscordEventHandler>(options =>
+            services.AddDiscord(options =>
             {
                 options.Token = Token;
             });

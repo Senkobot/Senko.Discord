@@ -13,7 +13,6 @@ namespace Senko.Discord
     public partial class DiscordClient : BaseDiscordClient
     {
         private readonly ILogger<DiscordClient> _logger;
-        private ulong? _currentUserId;
 
         public DiscordClient(
             IDiscordApiClient apiClient,
@@ -21,11 +20,10 @@ namespace Senko.Discord
             ICacheClient cacheClient,
             ILogger<DiscordClient> logger,
             IServiceProvider provider
-        )  : base(apiClient, gateway, provider)
+        )  : base(apiClient, gateway)
         {
             CacheClient = cacheClient;
             _logger = logger;
-            AttachHandlers();
         }
 
         public ICacheClient CacheClient { get; }
@@ -122,13 +120,13 @@ namespace Senko.Discord
 
         protected override Task<DiscordUserPacket> GetCurrentUserPacketAsync()
         {
-            if (!_currentUserId.HasValue)
+            if (!CurrentUserId.HasValue)
             {
                 return Task.FromResult<DiscordUserPacket>(default);
             }
 
             return GetOrLoadAsync(
-                CacheKey.User(_currentUserId.Value),
+                CacheKey.User(CurrentUserId.Value),
                 ApiClient.GetCurrentUserAsync,
                 ValidateCache
             );
@@ -215,46 +213,6 @@ namespace Senko.Discord
             }
 
             return packet;
-        }
-
-        private async Task AddAsync<T>(string listName, string cacheName, T item)
-            where T : ISnowflake
-        {
-            var cache = await CacheClient.GetAsync<List<ulong>>(listName);
-
-            if (cache.HasValue)
-            {
-                var ids = cache.Value;
-                ids.Add(item.Id);
-                await CacheClient.SetAsync(listName, ids);
-            }
-
-            await CacheClient.SetAsync(cacheName, item);
-        }
-
-        private async Task RemoveAsync(string listName, string cacheName, ulong id)
-        {
-            var cache = await CacheClient.GetAsync<List<ulong>>(listName);
-
-            if (cache.HasValue)
-            {
-                var ids = cache.Value;
-                ids.Remove(id);
-                await CacheClient.SetAsync(listName, ids);
-            }
-
-            await CacheClient.RemoveAsync(cacheName);
-        }
-
-        protected virtual Task OnGuildMemberRolesUpdate(DiscordGuildUser user)
-        {
-            return Task.CompletedTask;
-        }
-
-        public override void Dispose()
-        {
-            base.Dispose();
-            DetachHandlers();
         }
     }
 }

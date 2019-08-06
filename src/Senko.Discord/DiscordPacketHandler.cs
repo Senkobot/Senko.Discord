@@ -1,66 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using Foundatio.Caching;
 using Senko.Discord.Internal;
 using Senko.Discord.Packets;
 
 namespace Senko.Discord
 {
-    public partial class DiscordClient
+    public class DiscordPacketHandler : BaseDiscordPacketHandler
     {
-        private void AttachHandlers()
+        protected readonly ICacheClient CacheClient;
+
+        public DiscordPacketHandler(IDiscordEventHandler eventHandler, IDiscordClient client, ICacheClient cacheClient)
+            : base(eventHandler, client)
         {
-            Gateway.OnChannelCreate += UpdateChannelCacheAsync;
-            Gateway.OnChannelUpdate += UpdateChannelCacheAsync;
-
-            Gateway.OnChannelDelete += DeleteChannelCacheAsync;
-
-            Gateway.OnGuildCreate += InsertGuildCacheAsync;
-            Gateway.OnGuildUpdate += UpdateGuildCacheAsync;
-            Gateway.OnGuildDelete += DeleteGuildCacheAsync;
-
-            Gateway.OnGuildEmojiUpdate += UpdateEmojiCacheAsync;
-
-            Gateway.OnGuildMemberAdd += InsertGuildMemberCacheAsync;
-            Gateway.OnGuildMemberRemove += DeleteGuildMemberCacheAsync;
-            Gateway.OnGuildMemberUpdate += UpdateGuildMemberCacheAsync;
-
-            Gateway.OnGuildRoleCreate += UpdateRoleCacheAsync;
-            Gateway.OnGuildRoleUpdate += UpdateRoleCacheAsync;
-            Gateway.OnGuildRoleDelete += DeleteRoleCacheAsync;
-
-            Gateway.OnUserUpdate += UpdateUserCacheAsync;
-            Gateway.OnPresenceUpdate += UpdatePresenceAsync;
-
-            Gateway.OnReady += OnReadyAsync;
-        }
-
-        private void DetachHandlers()
-        {
-            Gateway.OnChannelCreate -= UpdateChannelCacheAsync;
-            Gateway.OnChannelUpdate -= UpdateChannelCacheAsync;
-
-            Gateway.OnChannelDelete -= DeleteChannelCacheAsync;
-
-            Gateway.OnGuildCreate -= InsertGuildCacheAsync;
-            Gateway.OnGuildUpdate -= UpdateGuildCacheAsync;
-            Gateway.OnGuildDelete -= DeleteGuildCacheAsync;
-
-            Gateway.OnGuildEmojiUpdate -= UpdateEmojiCacheAsync;
-
-            Gateway.OnGuildMemberAdd -= InsertGuildMemberCacheAsync;
-            Gateway.OnGuildMemberRemove -= DeleteGuildMemberCacheAsync;
-            Gateway.OnGuildMemberUpdate -= UpdateGuildMemberCacheAsync;
-
-            Gateway.OnGuildRoleCreate -= UpdateRoleCacheAsync;
-            Gateway.OnGuildRoleUpdate -= UpdateRoleCacheAsync;
-
-            Gateway.OnGuildRoleDelete -= DeleteRoleCacheAsync;
-
-            Gateway.OnUserUpdate -= UpdateUserCacheAsync;
-            Gateway.OnPresenceUpdate -= UpdatePresenceAsync;
-
-            Gateway.OnReady -= OnReadyAsync;
+            CacheClient = cacheClient;
         }
 
         private async Task UpdateEmojiCacheAsync(ulong guildId, DiscordEmoji[] emojis)
@@ -88,11 +44,9 @@ namespace Senko.Discord
             return CacheClient.SetAsync(CacheKey.GuildRole(guildId, role.Id), role);
         }
 
-        private Task OnReadyAsync(GatewayReadyPacket ready)
+        private Task InitializeCacheAsync(GatewayReadyPacket ready)
         {
-            _currentUserId = ready.CurrentUser.Id;
-
-            KeyValuePair<string, DiscordGuildPacket>[] readyPackets = new KeyValuePair<string, DiscordGuildPacket>[ready.Guilds.Count()];
+            var readyPackets = new KeyValuePair<string, DiscordGuildPacket>[ready.Guilds.Length];
 
             for (int i = 0, max = readyPackets.Length; i < max; i++)
             {
@@ -188,7 +142,7 @@ namespace Senko.Discord
 
             if (rolesEdited)
             {
-                await OnGuildMemberRolesUpdate(new DiscordGuildUser(cacheMember, this));
+                await EventHandler.OnGuildMemberRolesUpdate(new DiscordGuildUser(cacheMember, Client));
             }
         }
 
@@ -279,6 +233,141 @@ namespace Senko.Discord
                 CacheKey.Channel(channel.Id),
                 channel.Id
             );
+        }
+
+        public override async Task OnChannelCreate(DiscordChannelPacket packet)
+        {
+            await UpdateChannelCacheAsync(packet);
+            await base.OnChannelCreate(packet);
+        }
+
+        public override async Task OnChannelUpdate(DiscordChannelPacket packet)
+        {
+            await UpdateChannelCacheAsync(packet);
+            await base.OnChannelUpdate(packet);
+        }
+
+        public override async Task OnChannelDelete(DiscordChannelPacket packet)
+        {
+            await DeleteChannelCacheAsync(packet);
+            await base.OnChannelDelete(packet);
+        }
+
+        public override async Task OnGuildCreate(DiscordGuildPacket packet)
+        {
+            await InsertGuildCacheAsync(packet);
+            await base.OnGuildCreate(packet);
+        }
+
+        public override async Task OnGuildUpdate(DiscordGuildPacket packet)
+        {
+            await UpdateGuildCacheAsync(packet);
+            await base.OnGuildUpdate(packet);
+        }
+
+        public override async Task OnGuildDelete(DiscordGuildUnavailablePacket packet)
+        {
+            await DeleteGuildCacheAsync(packet);
+            await base.OnGuildDelete(packet);
+        }
+
+        public override async Task OnGuildMemberAdd(DiscordGuildMemberPacket packet)
+        {
+            await InsertGuildMemberCacheAsync(packet);
+            await base.OnGuildMemberAdd(packet);
+        }
+
+        public override async Task OnGuildMemberUpdate(GuildMemberUpdateEventArgs packet)
+        {
+            await UpdateGuildMemberCacheAsync(packet);
+            await base.OnGuildMemberUpdate(packet);
+        }
+
+        public override async Task OnGuildMemberRemove(GuildIdUserArgs packet)
+        {
+            await DeleteGuildMemberCacheAsync(packet.GuildId, packet.User);
+            await base.OnGuildMemberRemove(packet);
+        }
+
+        public override async Task OnGuildEmojiUpdate(GuildEmojisUpdateEventArgs packet)
+        {
+            await UpdateEmojiCacheAsync(packet.GuildId, packet.Emojis);
+            await base.OnGuildEmojiUpdate(packet);
+        }
+
+        public override async Task OnGuildRoleCreate(RoleEventArgs packet)
+        {
+            await UpdateRoleCacheAsync(packet.GuildId, packet.Role);
+            await base.OnGuildRoleCreate(packet);
+        }
+
+        public override async Task OnGuildRoleUpdate(RoleEventArgs packet)
+        {
+            await UpdateRoleCacheAsync(packet.GuildId, packet.Role);
+            await base.OnGuildRoleUpdate(packet);
+        }
+
+        public override async Task OnGuildRoleDelete(RoleDeleteEventArgs packet)
+        {
+            await DeleteRoleCacheAsync(packet.GuildId, packet.RoleId);
+            await base.OnGuildRoleDelete(packet);
+        }
+
+        public override async Task OnPresenceUpdate(DiscordPresencePacket packet)
+        {
+            await UpdatePresenceAsync(packet);
+            await base.OnPresenceUpdate(packet);
+        }
+
+        public override async Task OnReady(GatewayReadyPacket packet)
+        {
+            await InitializeCacheAsync(packet);
+            await base.OnReady(packet);
+        }
+
+        public override async Task OnUserUpdate(DiscordUserPacket packet)
+        {
+            await UpdateUserCacheAsync(packet);
+            await base.OnUserUpdate(packet);
+        }
+
+        private IEnumerable<Task> StoreListAsync<T>(string listName, Func<ulong, string> cacheName, IReadOnlyList<T> packets)
+            where T : ISnowflake
+        {
+            return new Task[]
+            {
+                CacheClient.SetAsync(listName, packets.Select(p => p.Id).ToArray()),
+                CacheClient.SetAllAsync(packets.ToDictionary(p => cacheName(p.Id), p => p))
+            };
+        }
+
+        private async Task AddAsync<T>(string listName, string cacheName, T item)
+            where T : ISnowflake
+        {
+            var cache = await CacheClient.GetAsync<List<ulong>>(listName);
+
+            if (cache.HasValue)
+            {
+                var ids = cache.Value;
+                ids.Add(item.Id);
+                await CacheClient.SetAsync(listName, ids);
+            }
+
+            await CacheClient.SetAsync(cacheName, item);
+        }
+
+        private async Task RemoveAsync(string listName, string cacheName, ulong id)
+        {
+            var cache = await CacheClient.GetAsync<List<ulong>>(listName);
+
+            if (cache.HasValue)
+            {
+                var ids = cache.Value;
+                ids.Remove(id);
+                await CacheClient.SetAsync(listName, ids);
+            }
+
+            await CacheClient.RemoveAsync(cacheName);
         }
     }
 }

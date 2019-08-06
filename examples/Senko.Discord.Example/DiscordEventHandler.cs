@@ -53,12 +53,17 @@ namespace Senko.Discord.Example
             return Task.CompletedTask;
         }
 
-        public Task OnGuildMemberCreate(IDiscordUser member)
+        public Task OnGuildMemberCreate(IDiscordGuildUser member)
         {
             return Task.CompletedTask;
         }
 
         public Task OnMessageUpdate(IDiscordMessage message)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task OnGuildMemberRolesUpdate(IDiscordGuildUser member)
         {
             return Task.CompletedTask;
         }
