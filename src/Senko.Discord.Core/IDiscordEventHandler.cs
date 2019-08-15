@@ -33,7 +33,7 @@ namespace Senko.Discord
 
         Task OnGuildRoleUpdate(ulong guildId, IDiscordRole role);
 
-        Task OnGuildRoleDeleted(ulong guildId, ulong roleId);
+        Task OnGuildRoleDeleted(ulong guildId, IDiscordRole role);
 
         Task OnMessageCreate(IDiscordMessage message);
 

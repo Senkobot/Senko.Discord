@@ -18,7 +18,7 @@ namespace Senko.Discord.Example
             _client = client;
         }
 
-        public Task OnGuildRoleDeleted(ulong guildId, ulong roleId)
+        public Task OnGuildRoleDeleted(ulong guildId, IDiscordRole role)
         {
             return Task.CompletedTask;
         }
