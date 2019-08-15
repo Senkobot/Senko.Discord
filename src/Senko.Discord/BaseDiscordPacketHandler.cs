@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using Senko.Discord.Gateway;
 using Senko.Discord.Internal;
 using Senko.Discord.Packets;
@@ -18,17 +19,23 @@ namespace Senko.Discord
 
         public virtual Task OnChannelCreate(DiscordChannelPacket packet)
         {
-            return Task.CompletedTask;
+            var channel = Client.GetChannelFromPacket(packet);
+
+            return EventHandler.OnChannelCreate(channel);
         }
 
         public virtual Task OnChannelUpdate(DiscordChannelPacket packet)
         {
-            return Task.CompletedTask;
+            var channel = Client.GetChannelFromPacket(packet);
+
+            return EventHandler.OnChannelCreate(channel);
         }
 
         public virtual Task OnChannelDelete(DiscordChannelPacket packet)
         {
-            return Task.CompletedTask;
+            var channel = Client.GetChannelFromPacket(packet);
+
+            return EventHandler.OnChannelCreate(channel);
         }
 
         public virtual Task OnGuildCreate(DiscordGuildPacket packet)
@@ -40,17 +47,16 @@ namespace Senko.Discord
 
         public virtual Task OnGuildUpdate(DiscordGuildPacket packet)
         {
-            return Task.CompletedTask;
+            var guild = new DiscordGuild(packet, Client);
+
+            return EventHandler.OnGuildUpdate(guild);
         }
 
         public virtual Task OnGuildDelete(DiscordGuildUnavailablePacket packet)
         {
-            if (packet.IsUnavailable.GetValueOrDefault(false))
-            {
-                return EventHandler.OnGuildUnavailable(packet.GuildId);
-            }
-
-            return EventHandler.OnGuildLeave(packet.GuildId);
+            return packet.IsUnavailable.GetValueOrDefault(false)
+                ? EventHandler.OnGuildUnavailable(packet.GuildId)
+                : EventHandler.OnGuildLeave(packet.GuildId);
         }
 
         public virtual Task OnGuildMemberAdd(DiscordGuildMemberPacket packet)
@@ -64,17 +70,20 @@ namespace Senko.Discord
         {
             var member = await Client.GetGuildUserAsync(packet.User.Id, packet.GuildId);
 
-            if (member == null)
+            if (member != null)
             {
-                return;
+                await EventHandler.OnGuildMemberDelete(member);
             }
-
-            await EventHandler.OnGuildMemberDelete(member);
         }
 
-        public virtual Task OnGuildMemberUpdate(GuildMemberUpdateEventArgs packet)
+        public virtual async Task OnGuildMemberUpdate(GuildMemberUpdateEventArgs packet)
         {
-            return Task.CompletedTask;
+            var member = await Client.GetGuildUserAsync(packet.User.Id, packet.GuildId);
+
+            if (member != null)
+            {
+                await EventHandler.OnGuildMemberUpdate(member);
+            }
         }
 
         public virtual Task OnGuildBanAdd(GuildIdUserArgs packet)
@@ -94,17 +103,21 @@ namespace Senko.Discord
 
         public virtual Task OnGuildRoleCreate(RoleEventArgs packet)
         {
-            return Task.CompletedTask;
+            var role = new DiscordRole(packet.Role, Client);
+
+            return EventHandler.OnGuildRoleCreate(packet.GuildId, role);
         }
 
         public virtual Task OnGuildRoleUpdate(RoleEventArgs packet)
         {
-            return Task.CompletedTask;
+            var role = new DiscordRole(packet.Role, Client);
+
+            return EventHandler.OnGuildRoleUpdate(packet.GuildId, role);
         }
 
         public virtual Task OnGuildRoleDelete(RoleDeleteEventArgs packet)
         {
-            return Task.CompletedTask;
+            return EventHandler.OnGuildRoleDeleted(packet.GuildId, packet.RoleId);
         }
 
         public virtual Task OnMessageCreate(DiscordMessagePacket packet)
@@ -123,12 +136,12 @@ namespace Senko.Discord
 
         public virtual Task OnMessageDelete(MessageDeleteArgs packet)
         {
-            return Task.CompletedTask;
+            return EventHandler.OnMessageDeleted(packet.ChannelId, packet.MessageId);
         }
 
         public virtual Task OnMessageDeleteBulk(MessageBulkDeleteEventArgs packet)
         {
-            return Task.CompletedTask;
+            return Task.WhenAll(packet.MessagesDeleted.Select(id => EventHandler.OnMessageDeleted(packet.ChannelId, id)));
         }
 
         public virtual Task OnPresenceUpdate(DiscordPresencePacket packet)

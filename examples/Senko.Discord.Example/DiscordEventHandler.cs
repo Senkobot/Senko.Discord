@@ -18,6 +18,11 @@ namespace Senko.Discord.Example
             _client = client;
         }
 
+        public Task OnGuildRoleDeleted(ulong guildId, ulong roleId)
+        {
+            return Task.CompletedTask;
+        }
+
         public async Task OnMessageCreate(IDiscordMessage message)
         {
             if (message.Content == "!ping")
@@ -33,7 +38,27 @@ namespace Senko.Discord.Example
             return Task.CompletedTask;
         }
 
+        public Task OnGuildUpdate(IDiscordGuild guild)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task OnUserUpdate(IDiscordUser user)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task OnChannelCreate(IDiscordChannel channel)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task OnChannelUpdate(IDiscordChannel channel)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task OnChannelDelete(IDiscordChannel channel)
         {
             return Task.CompletedTask;
         }
@@ -53,12 +78,32 @@ namespace Senko.Discord.Example
             return Task.CompletedTask;
         }
 
+        public Task OnGuildMemberUpdate(IDiscordGuildUser member)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task OnGuildMemberCreate(IDiscordGuildUser member)
         {
             return Task.CompletedTask;
         }
 
+        public Task OnGuildRoleCreate(ulong guildId, IDiscordRole role)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task OnGuildRoleUpdate(ulong guildId, IDiscordRole role)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task OnMessageUpdate(IDiscordMessage message)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task OnMessageDeleted(ulong channelId, ulong messageId)
         {
             return Task.CompletedTask;
         }

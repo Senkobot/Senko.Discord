@@ -9,7 +9,15 @@ namespace Senko.Discord
     {
         Task OnGuildJoin(IDiscordGuild guild);
 
+        Task OnGuildUpdate(IDiscordGuild guild);
+
         Task OnUserUpdate(IDiscordUser user);
+
+        Task OnChannelCreate(IDiscordChannel channel);
+
+        Task OnChannelUpdate(IDiscordChannel channel);
+
+        Task OnChannelDelete(IDiscordChannel channel);
 
         Task OnGuildUnavailable(ulong guildId);
 
@@ -17,11 +25,21 @@ namespace Senko.Discord
 
         Task OnGuildMemberDelete(IDiscordGuildUser member);
 
+        Task OnGuildMemberUpdate(IDiscordGuildUser member);
+
         Task OnGuildMemberCreate(IDiscordGuildUser member);
+
+        Task OnGuildRoleCreate(ulong guildId, IDiscordRole role);
+
+        Task OnGuildRoleUpdate(ulong guildId, IDiscordRole role);
+
+        Task OnGuildRoleDeleted(ulong guildId, ulong roleId);
 
         Task OnMessageCreate(IDiscordMessage message);
 
         Task OnMessageUpdate(IDiscordMessage message);
+
+        Task OnMessageDeleted(ulong channelId, ulong messageId);
 
         Task OnGuildMemberRolesUpdate(IDiscordGuildUser member);
     }
