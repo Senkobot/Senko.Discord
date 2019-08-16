@@ -5,6 +5,8 @@ namespace Senko.Discord
 {
 	public interface IDiscordChannel : ISnowflake
 	{
+        ulong? GuildId { get; }
+
 		bool IsNsfw { get; }
 
 		string Name { get; }
@@ -14,7 +16,7 @@ namespace Senko.Discord
 
 	public interface IDiscordGuildChannel : IDiscordChannel
 	{
-		ulong GuildId { get; }
+		new ulong GuildId { get; }
 
 		ChannelType Type { get; }
 

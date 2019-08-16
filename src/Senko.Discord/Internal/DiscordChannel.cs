@@ -25,7 +25,10 @@ namespace Senko.Discord.Internal
 		public ulong Id
 			=> _packet.Id;
 
-		public bool IsNsfw
+        public ulong? GuildId
+            => _packet.GuildId;
+
+        public bool IsNsfw
 			=> _packet?.IsNsfw
                 .GetValueOrDefault(false) 
                     ?? false;

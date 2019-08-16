@@ -28,7 +28,18 @@ namespace Senko.Discord
 
         public ICacheClient CacheClient { get; }
 
-        private static bool ValidateCache(DiscordChannelPacket p) => !string.IsNullOrEmpty(p.Name);
+        private static bool ValidateCache(DiscordChannelPacket p)
+        {
+            if (!p.GuildId.HasValue && (p.Type == ChannelType.GUILDTEXT
+                || p.Type == ChannelType.GUILDNEWS
+                || p.Type == ChannelType.CATEGORY
+                || p.Type == ChannelType.GUILDVOICE))
+            {
+                return false;
+            }
+
+            return !string.IsNullOrEmpty(p.Name);
+        }
 
         private static bool ValidateCache(DiscordGuildMemberPacket p) => ValidateCache(p.User);
 
