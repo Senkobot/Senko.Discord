@@ -63,7 +63,7 @@ namespace Senko.Discord
         {
             var channel = await ApiClient.CreateDMChannelAsync(userid);
 
-            return ResolveChannel(channel) as IDiscordTextChannel;
+            return this.GetChannelFromPacket(channel) as IDiscordTextChannel;
 		}
 
 		public virtual async Task<IDiscordRole> CreateRoleAsync(
@@ -119,21 +119,21 @@ namespace Senko.Discord
         {
             var channelPackets = await GetGuildChannelPacketsAsync(guildId);
 
-            return channelPackets.Select(x => ResolveChannel(x) as IDiscordGuildChannel);
+            return channelPackets.Select(x => this.GetChannelFromPacket(x) as IDiscordGuildChannel);
         }
 
 		public virtual async Task<IDiscordChannel> GetChannelAsync(ulong id, ulong? guildId = null)
 		{
 			var channel = await GetChannelPacketAsync(id);
 
-			return ResolveChannel(channel);
+			return this.GetChannelFromPacket(channel);
         }
 
         public virtual async Task<T> GetChannelAsync<T>(ulong id, ulong? guildId = null) where T : class, IDiscordChannel
         {
             var channel = await GetChannelPacketAsync(id);
 
-            return ResolveChannel(channel) as T;
+            return this.GetChannelFromPacket(channel) as T;
         }
 
         public virtual async Task<IDiscordSelfUser> GetSelfAsync()
@@ -207,27 +207,6 @@ namespace Senko.Discord
 				await ApiClient.SendMessageAsync(channelId, message),
 				this
 			);
-
-        private IDiscordChannel ResolveChannel(DiscordChannelPacket packet)
-		{
-            switch (packet.Type)
-			{
-				case ChannelType.GUILDTEXT:
-                case ChannelType.GUILDNEWS:
-					return new DiscordGuildTextChannel(packet, this);
-
-                case ChannelType.CATEGORY:
-                case ChannelType.GUILDVOICE:
-                    return new DiscordGuildChannel(packet, this);
-
-                case ChannelType.DM:
-                case ChannelType.GROUPDM:
-                    return new DiscordTextChannel(packet, this);
-
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-		}
 
         public virtual void Dispose()
         {
