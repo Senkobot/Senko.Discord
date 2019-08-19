@@ -119,7 +119,9 @@ namespace Senko.Discord
         {
             var channelPackets = await GetGuildChannelPacketsAsync(guildId);
 
-            return channelPackets.Select(x => this.GetChannelFromPacket(x) as IDiscordGuildChannel);
+            return channelPackets
+                .Select(this.GetChannelFromPacket)
+                .OfType<IDiscordGuildChannel>();
         }
 
 		public virtual async Task<IDiscordChannel> GetChannelAsync(ulong id, ulong? guildId = null)

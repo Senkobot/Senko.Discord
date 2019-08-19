@@ -6,19 +6,19 @@ namespace Senko.Discord.Internal
 {
 	public class DiscordGuildChannel : DiscordChannel, IDiscordGuildChannel
 	{
-		public DiscordGuildChannel(DiscordChannelPacket packet, IDiscordClient client)
+		public DiscordGuildChannel(DiscordChannelPacket packet, IDiscordClient client, ulong guildId)
 			: base(packet, client)
-		{
-		}
+        {
+            GuildId = guildId;
+        }
 
-		public ulong GuildId
-			=> _packet.GuildId.Value;
+		public ulong GuildId { get; }
 
 		public ChannelType Type
 			=> _packet.Type;
 
-		public async Task<IDiscordGuild> GetGuildAsync()
-			=> await _client.GetGuildAsync(GuildId);
+		public Task<IDiscordGuild> GetGuildAsync()
+			=> _client.GetGuildAsync(GuildId);
 
 		public async Task<GuildPermission> GetPermissionsAsync(IDiscordGuildUser user)
 		{
