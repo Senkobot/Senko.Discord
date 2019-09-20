@@ -1,0 +1,14 @@
+diff a/src/Senko.Discord.Core/IDiscordEventHandler.cs b/src/Senko.Discord.Core/IDiscordEventHandler.cs	(rejected hunks)
+@@ -23,6 +24,12 @@ namespace Senko.Discord
+ 
+         Task OnMessageUpdate(IDiscordMessage message);
+ 
++        Task OnMessageDeleted(ulong? guildId, ulong channelId, ulong messageId);
++
++        Task OnMessageEmojiCreated(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji);
++
++        Task OnMessageEmojiDeleted(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji);
++
+         Task OnGuildMemberRolesUpdate(IDiscordGuildUser member);
+     }
+ }

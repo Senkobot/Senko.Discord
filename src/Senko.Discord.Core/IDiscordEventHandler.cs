@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using Senko.Discord.Packets;
 
 namespace Senko.Discord
 {
@@ -40,6 +41,10 @@ namespace Senko.Discord
         Task OnMessageUpdate(IDiscordMessage message);
 
         Task OnMessageDeleted(ulong channelId, ulong messageId);
+
+        Task OnMessageEmojiCreated(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji);
+
+        Task OnMessageEmojiDeleted(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji);
 
         Task OnGuildMemberRolesUpdate(IDiscordGuildUser member);
     }

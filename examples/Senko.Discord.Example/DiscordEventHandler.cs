@@ -108,6 +108,21 @@ namespace Senko.Discord.Example
             return Task.CompletedTask;
         }
 
+        public Task OnMessageDeleted(ulong? guildId, ulong channelId, ulong messageId)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task OnMessageEmojiCreated(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task OnMessageEmojiDeleted(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji)
+        {
+            return Task.CompletedTask;
+        }
+
         public Task OnGuildMemberRolesUpdate(IDiscordGuildUser member)
         {
             return Task.CompletedTask;

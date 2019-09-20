@@ -12,7 +12,7 @@ namespace Senko.Discord.Internal
             GuildId = guildId;
         }
 
-		public ulong GuildId { get; }
+		public new ulong GuildId { get; }
 
 		public ChannelType Type
 			=> _packet.Type;
