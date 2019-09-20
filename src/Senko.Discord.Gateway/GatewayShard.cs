@@ -1,6 +1,7 @@
 ﻿using Senko.Discord.Gateway.Connection;
 using System;
 using System.Runtime.CompilerServices;
+using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
@@ -98,6 +99,12 @@ namespace Senko.Discord.Gateway
                 case "MESSAGE_DELETE_BULK":
                     return _packetHandler.OnMessageDeleteBulk(Deserialize<MessageBulkDeleteEventArgs>(data));
 
+                case "MESSAGE_REACTION_ADD":
+                    return _packetHandler.OnMessageReactionAdd(Deserialize<MessageReactionArgs>(data));
+
+                case "MESSAGE_REACTION_REMOVE":
+                    return _packetHandler.OnMessageReactionRemove(Deserialize<MessageReactionArgs>(data));
+
                 case "GUILD_EMOJIS_UPDATE":
                     return _packetHandler.OnGuildEmojiUpdate(Deserialize<GuildEmojisUpdateEventArgs>(data));
 
@@ -157,10 +164,12 @@ namespace Senko.Discord.Gateway
                 }
 
                 case "PRESENCES_REPLACE":
+                    // This event can be ignored: https://github.com/discordapp/discord-api-docs/issues/683#issuecomment-420940350
                     return Task.CompletedTask;
 
                 default:
                     _logger.LogWarning("Unhandled event {EventName}.", identifier.EventName);
+                    _logger.LogTrace("Unhandled event data: {EventData}", Encoding.UTF8.GetString(data.Span));
                     return Task.CompletedTask;
             }
         }

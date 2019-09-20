@@ -181,6 +181,16 @@ namespace Senko.Discord
             return Task.WhenAll(packet.MessagesDeleted.Select(id => EventHandler.OnMessageDeleted(packet.ChannelId, id)));
         }
 
+        public Task OnMessageReactionAdd(MessageReactionArgs packet)
+        {
+            return EventHandler.OnMessageEmojiCreated(packet.GuildId, packet.ChannelId, packet.MessageId, packet.Emoji);
+        }
+
+        public Task OnMessageReactionRemove(MessageReactionArgs packet)
+        {
+            return EventHandler.OnMessageEmojiDeleted(packet.GuildId, packet.ChannelId, packet.MessageId, packet.Emoji);
+        }
+
         public Task OnPresenceUpdate(DiscordPresencePacket packet)
         {
             return UpdatePresenceAsync(packet);

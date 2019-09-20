@@ -34,6 +34,9 @@ namespace Senko.Discord.Gateway
         Task OnMessageDelete(MessageDeleteArgs packet);
         Task OnMessageDeleteBulk(MessageBulkDeleteEventArgs packet);
 
+        Task OnMessageReactionAdd(MessageReactionArgs packet);
+        Task OnMessageReactionRemove(MessageReactionArgs packet);
+
         Task OnPresenceUpdate(DiscordPresencePacket packet);
 
         Task OnReady(GatewayReadyPacket packet);
