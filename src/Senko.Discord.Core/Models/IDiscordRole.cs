@@ -9,7 +9,7 @@ namespace Senko.Discord
         /// </summary>
 		string Name { get; }
         /// <summary>
-        /// The raw name of the role. In the that the role contains '@everyone' and '@here' it'll get pinged.
+        /// The raw name of the role. In the case that the role contains '@everyone' and '@here' it'll get pinged.
         /// </summary>
         string RawName { get; }
         /// <summary>
