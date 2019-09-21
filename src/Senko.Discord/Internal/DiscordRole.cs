@@ -3,20 +3,24 @@
 namespace Senko.Discord.Internal
 {
 	public class DiscordRole : IDiscordRole
-	{
-		private DiscordRolePacket _packet;
+    {
+		private readonly DiscordRolePacket _packet;
 		private readonly IDiscordClient _client;
+        private string _escapedName;
 
-		public DiscordRole(DiscordRolePacket packet, IDiscordClient client)
+        public DiscordRole(DiscordRolePacket packet, IDiscordClient client)
 		{
 			_packet = packet;
 			_client = client;
 		}
 
 		public string Name
-			=> _packet.Name;
+			=> _escapedName ??= _client.EscapeEveryoneAndHere(_packet.Name);
 
-		public Color Color
+        public string RawName
+            => _packet.Name;
+
+        public Color Color
 			=> new Color((uint)_packet.Color);
 
 		public int Position

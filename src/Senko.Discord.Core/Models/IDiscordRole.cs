@@ -5,9 +5,13 @@ namespace Senko.Discord
 	public interface IDiscordRole : ISnowflake
 	{
         /// <summary>
-        /// Name of the role.
+        /// The escaped name of the role.
         /// </summary>
 		string Name { get; }
+        /// <summary>
+        /// The raw name of the role. In the that the role contains '@everyone' and '@here' it'll get pinged.
+        /// </summary>
+        string RawName { get; }
         /// <summary>
         /// The color attached to the role.
         /// </summary>
