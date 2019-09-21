@@ -12,7 +12,7 @@ namespace Senko.Discord.Example
         /// <summary>
         /// The Bot token.
         /// </summary>
-        private const string Token = "NTgwNTAyODkzNjU2OTMyMzYy.XRaQ7A.BUkzVW35FRgPGN36qJYSVYPIyFo";
+        private const string Token = "";
 
         public static async Task Main(string[] args)
         {
