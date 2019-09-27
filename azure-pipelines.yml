@@ -12,10 +12,9 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- task: DotNetCoreInstaller@0
+- task: DotNetCoreInstaller@1
   inputs:
-    packageType: 'sdk'
-    version: '3.0.100-preview7-012821'
+    version: '3.0.100'
   displayName: install .NET Core 3
 
 - script: dotnet restore

@@ -60,34 +60,34 @@ namespace Senko.Discord.Internal
 		public DiscordMessageType Type
 			=> _packet.Type;
 
-		public async Task<IDiscordMessage> EditAsync(EditMessageArgs args)
+		public async ValueTask<IDiscordMessage> EditAsync(EditMessageArgs args)
 			=> await _client.EditMessageAsync(ChannelId, Id, args.Content, args.Embed);
 
-		public async Task DeleteAsync()
+		public async ValueTask DeleteAsync()
 			=> await _client.ApiClient.DeleteMessageAsync(_packet.ChannelId, _packet.Id);
 
-        public async Task<IDiscordTextChannel> GetChannelAsync()
+        public async ValueTask<IDiscordTextChannel> GetChannelAsync()
         {
             var channel = await _client.GetChannelAsync(_packet.ChannelId, _packet.GuildId);
             return channel as IDiscordTextChannel;
         }
 
-		public async Task<IEnumerable<IDiscordUser>> GetReactionsAsync(DiscordEmoji emoji)
+		public async ValueTask<IEnumerable<IDiscordUser>> GetReactionsAsync(DiscordEmoji emoji)
 			=> await _client.GetReactionsAsync(_packet.ChannelId, Id, emoji);
 
-		public async Task CreateReactionAsync(DiscordEmoji emoji)
+		public async ValueTask CreateReactionAsync(DiscordEmoji emoji)
 			=> await _client.ApiClient.CreateReactionAsync(ChannelId, Id, emoji);
 
-		public async Task DeleteReactionAsync(DiscordEmoji emoji)
+		public async ValueTask DeleteReactionAsync(DiscordEmoji emoji)
 			=> await _client.ApiClient.DeleteReactionAsync(ChannelId, Id, emoji);
 
-		public async Task DeleteReactionAsync(DiscordEmoji emoji, IDiscordUser user)
+		public async ValueTask DeleteReactionAsync(DiscordEmoji emoji, IDiscordUser user)
 			=> await DeleteReactionAsync(emoji, user.Id);
 
-		public async Task DeleteReactionAsync(DiscordEmoji emoji, ulong userId)
+		public async ValueTask DeleteReactionAsync(DiscordEmoji emoji, ulong userId)
 			=> await _client.ApiClient.DeleteReactionAsync(ChannelId, Id, emoji, userId);
 
-		public async Task DeleteAllReactionsAsync()
+		public async ValueTask DeleteAllReactionsAsync()
 			=> await _client.ApiClient.DeleteReactionsAsync(ChannelId, Id);
 	}
 }

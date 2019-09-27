@@ -33,12 +33,12 @@ namespace Senko.Discord.Gateway
 
         public string[] TraceServers { get; private set; }
 
-        public async Task RestartAsync()
+        public async ValueTask RestartAsync()
         {
             await _connection.ReconnectAsync();
         }
 
-		public async Task StartAsync()
+		public async ValueTask StartAsync()
 		{
 			if (_isRunning)
 			{
@@ -51,7 +51,7 @@ namespace Senko.Discord.Gateway
 			_isRunning = true;
 		}
 
-		public async Task StopAsync()
+		public async ValueTask StopAsync()
 		{
 			if (!_isRunning)
 			{
@@ -66,11 +66,11 @@ namespace Senko.Discord.Gateway
 			_isRunning = false;
 		}
 
-        public Task Dispatch(GatewayMessageIdentifier identifier, ReadOnlyMemory<byte> data)
+        public ValueTask Dispatch(GatewayMessageIdentifier identifier, ReadOnlyMemory<byte> data)
         {
             if (identifier.OpCode != GatewayOpcode.Dispatch)
             {
-                return Task.CompletedTask;
+                return default;
             }
 
             switch (identifier.EventName)
@@ -165,12 +165,12 @@ namespace Senko.Discord.Gateway
 
                 case "PRESENCES_REPLACE":
                     // This event can be ignored: https://github.com/discordapp/discord-api-docs/issues/683#issuecomment-420940350
-                    return Task.CompletedTask;
+                    return default;
 
                 default:
                     _logger.LogWarning("Unhandled event {EventName}.", identifier.EventName);
                     _logger.LogTrace("Unhandled event data: {EventData}", Encoding.UTF8.GetString(data.Span));
-                    return Task.CompletedTask;
+                    return default;
             }
         }
 
@@ -182,7 +182,7 @@ namespace Senko.Discord.Gateway
             return packet.Data;
         }
 
-		public Task SendAsync(int shardId, GatewayOpcode opCode, object payload)
+		public ValueTask SendAsync(int shardId, GatewayOpcode opCode, object payload)
 		{
 			if (payload == null)
 			{

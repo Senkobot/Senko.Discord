@@ -7,19 +7,19 @@ namespace Senko.Discord
 {
 	public interface IDiscordTextChannel : IDiscordChannel
 	{
-		Task DeleteMessagesAsync(params ulong[] id);
+		ValueTask DeleteMessagesAsync(params ulong[] id);
 
-		Task DeleteMessagesAsync(params IDiscordMessage[] id);
+		ValueTask DeleteMessagesAsync(params IDiscordMessage[] id);
 
-		Task<IEnumerable<IDiscordMessage>> GetMessagesAsync(int amount = 100);
+		ValueTask<IEnumerable<IDiscordMessage>> GetMessagesAsync(int amount = 100);
 
-		Task<IDiscordMessage> GetMessageAsync(ulong id);
+		ValueTask<IDiscordMessage> GetMessageAsync(ulong id);
 
-		Task<IDiscordMessage> SendMessageAsync(string content, bool isTTS = false, DiscordEmbed embed = null);
+		ValueTask<IDiscordMessage> SendMessageAsync(string content, bool isTTS = false, DiscordEmbed embed = null);
 
-		Task<IDiscordMessage> SendFileAsync(Stream file, string fileName, string content = null, bool isTTs = false, DiscordEmbed embed = null);
+		ValueTask<IDiscordMessage> SendFileAsync(Stream file, string fileName, string content = null, bool isTTs = false, DiscordEmbed embed = null);
 
-		Task TriggerTypingAsync();
+		ValueTask TriggerTypingAsync();
 	}
 
 	public enum GetMessageType

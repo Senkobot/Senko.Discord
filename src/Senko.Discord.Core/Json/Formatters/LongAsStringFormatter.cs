@@ -1,24 +1,16 @@
 ﻿using System;
 using System.Globalization;
-using SpanJson;
-using SpanJson.Formatters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Senko.Discord.Json.Formatters
 {
-    public sealed class LongAsStringFormatter : ICustomJsonFormatter<ulong>
+    public sealed class LongAsStringFormatter : JsonConverter<ulong>
     {
-        public static readonly LongAsStringFormatter Default = new LongAsStringFormatter();
-
-        public object Arguments { get; set; }
-
-        public void Serialize(ref JsonWriter<char> writer, ulong value)
+        public override ulong Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
-            StringUtf16Formatter.Default.Serialize(ref writer, value.ToString(CultureInfo.InvariantCulture));
-        }
+            var value = reader.GetString();
 
-        public ulong Deserialize(ref JsonReader<char> reader)
-        {
-            var value = StringUtf16Formatter.Default.Deserialize(ref reader);
             if (ulong.TryParse(value, out var longValue))
             {
                 return longValue;
@@ -27,20 +19,9 @@ namespace Senko.Discord.Json.Formatters
             throw new InvalidOperationException("Invalid value.");
         }
 
-        public void Serialize(ref JsonWriter<byte> writer, ulong value)
+        public override void Write(Utf8JsonWriter writer, ulong value, JsonSerializerOptions options)
         {
-            StringUtf8Formatter.Default.Serialize(ref writer, value.ToString(CultureInfo.InvariantCulture));
-        }
-
-        public ulong Deserialize(ref JsonReader<byte> reader)
-        {
-            var value = StringUtf8Formatter.Default.Deserialize(ref reader);
-            if (ulong.TryParse(value, out var longValue))
-            {
-                return longValue;
-            }
-
-            throw new InvalidOperationException("Invalid value.");
+            writer.WriteStringValue(value.ToString(CultureInfo.InvariantCulture));
         }
     }
 }

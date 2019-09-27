@@ -2,22 +2,27 @@
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Senko.Discord.Packets
 {
     [DataContract]
     public class DiscordEmoji
 	{
-		[DataMember(Name = "id", Order = 1)]
+		[JsonPropertyName("id")]
+[DataMember(Name = "id", Order = 1)]
 		public ulong? Id { get; set; }
 
-		[DataMember(Name = "name", Order = 2)]
+		[JsonPropertyName("name")]
+[DataMember(Name = "name", Order = 2)]
 		public string Name { get; set; }
 
-		[DataMember(Name = "roles", Order = 3)]
+		[JsonPropertyName("roles")]
+[DataMember(Name = "roles", Order = 3)]
 		public List<ulong> WhitelistedRoles { get; set; }
 
-		[DataMember(Name = "user", Order = 4)]
+		[JsonPropertyName("user")]
+[DataMember(Name = "user", Order = 4)]
 		public DiscordUserPacket Creator { get; set; }
 
 		[DataMember(Name ="require_colons", Order = 5)]
@@ -26,7 +31,8 @@ namespace Senko.Discord.Packets
 		[DataMember(Name ="managed", Order = 6)]
 		public bool? Managed { get; set; }
 
-		[DataMember(Name = "animated", Order = 7)]
+		[JsonPropertyName("animated")]
+[DataMember(Name = "animated", Order = 7)]
 		public bool? Animated { get; set; }
 
 		public static bool TryParse(string text, out DiscordEmoji emoji)

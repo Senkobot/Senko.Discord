@@ -4,6 +4,6 @@ namespace Senko.Discord.Gateway.Ratelimiting
 {
     public interface IDiscordConnectionRatelimiter
     {
-        Task<bool> CanIdentifyAsync();
+        ValueTask<bool> CanIdentifyAsync();
     }
 }

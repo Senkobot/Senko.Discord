@@ -31,20 +31,20 @@ namespace Senko.Discord.Internal
         public DateTimeOffset? PremiumSince
             => _packet.PremiumSince;
 
-        public async Task AddRoleAsync(IDiscordRole role)
+        public async ValueTask AddRoleAsync(IDiscordRole role)
 		{
 			await Client.ApiClient.AddGuildMemberRoleAsync(GuildId, Id, role.Id);
 		}
 
-		public async Task<IDiscordGuild> GetGuildAsync()
+		public async ValueTask<IDiscordGuild> GetGuildAsync()
 			=> await Client.GetGuildAsync(_packet.GuildId);
 
-		public async Task KickAsync(string reason = null)
+		public async ValueTask KickAsync(string reason = null)
 		{
 			await Client.ApiClient.RemoveGuildMemberAsync(GuildId, Id, reason);
 		}
 
-		public async Task RemoveRoleAsync(IDiscordRole role)
+		public async ValueTask RemoveRoleAsync(IDiscordRole role)
 		{
             if(role == null)
             {
@@ -54,14 +54,14 @@ namespace Senko.Discord.Internal
 			await Client.ApiClient.RemoveGuildMemberRoleAsync(GuildId, Id, role.Id);
 		}
 
-		public async Task<bool> HasPermissionsAsync(GuildPermission permissions)
+		public async ValueTask<bool> HasPermissionsAsync(GuildPermission permissions)
 		{
             var guild = await GetGuildAsync();
 			GuildPermission p = await guild.GetPermissionsAsync(this);
 			return p.HasFlag(permissions);
 		}
 
-		public async Task<int> GetHierarchyAsync()
+		public async ValueTask<int> GetHierarchyAsync()
         {
             var guild = await GetGuildAsync();
             return (await guild.GetRolesAsync())

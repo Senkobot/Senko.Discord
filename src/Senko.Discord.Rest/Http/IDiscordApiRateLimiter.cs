@@ -4,8 +4,8 @@ namespace Senko.Discord.Rest.Http
 {
     public interface IDiscordApiRateLimiter
     {
-		Task<bool> CanStartRequestAsync(RequestMethod method, string requestUri);
+        ValueTask<bool> CanStartRequestAsync(string method, string requestUri);
 
-		Task OnRequestSuccessAsync(HttpResponse response);
+        ValueTask OnRequestSuccessAsync(HttpResponse response);
     }
 }

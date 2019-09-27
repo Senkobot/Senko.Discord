@@ -10,12 +10,12 @@ namespace Senko.Discord
         /// Gets recent DM channels for the current user. This function does not work on a BOT account.
         /// </summary>
         /// <remarks>Does not work on a BOT account.</remarks>
-        Task<IDiscordChannel> GetDMChannelsAsync();
+        ValueTask<IDiscordChannel> GetDMChannelsAsync();
 
         /// <summary>
         /// Modify the current user.
         /// </summary>
         /// <param name="modifyArgs"></param>
-        Task ModifyAsync(Action<UserModifyArgs> modifyArgs);
+        ValueTask ModifyAsync(Action<UserModifyArgs> modifyArgs);
     }
 }

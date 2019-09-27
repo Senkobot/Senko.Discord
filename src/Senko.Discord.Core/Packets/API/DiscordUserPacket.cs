@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Senko.Discord.Packets
 {
@@ -8,22 +9,28 @@ namespace Senko.Discord.Packets
 		[DataMember(Name ="id", Order = 1)]
 		public ulong Id { get; set; }
 
-		[DataMember(Name = "username", Order = 2)]
+		[JsonPropertyName("username")]
+[DataMember(Name = "username", Order = 2)]
 		public string Username { get; set; }
 
-		[DataMember(Name = "discriminator", Order = 3)]
+		[JsonPropertyName("discriminator")]
+[DataMember(Name = "discriminator", Order = 3)]
 		public string Discriminator { get; set; }
 
-		[DataMember(Name = "bot", Order = 4)]
+		[JsonPropertyName("bot")]
+[DataMember(Name = "bot", Order = 4)]
 		public bool IsBot { get; set; }
 
-		[DataMember(Name = "avatar", Order = 5)]
+		[JsonPropertyName("avatar")]
+[DataMember(Name = "avatar", Order = 5)]
 		public string Avatar { get; set; }
 
-		[DataMember(Name = "verified", Order = 6)]
+		[JsonPropertyName("verified")]
+[DataMember(Name = "verified", Order = 6)]
 		public bool Verified { get; set; }
 
-		[DataMember(Name = "email", Order = 7)]
+		[JsonPropertyName("email")]
+[DataMember(Name = "email", Order = 7)]
 		public string Email { get; set; }
 
 		[DataMember(Name ="mfa_enabled", Order = 8)]

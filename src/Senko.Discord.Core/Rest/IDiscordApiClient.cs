@@ -7,80 +7,80 @@ namespace Senko.Discord.Rest
 {
 	public interface IDiscordApiClient : IGatewayApiClient
 	{
-		Task AddGuildBanAsync(ulong guildId, ulong userId, int pruneDays = 7, string reason = null);
+		ValueTask AddGuildBanAsync(ulong guildId, ulong userId, int pruneDays = 7, string reason = null);
 
-		Task AddGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId);
+		ValueTask AddGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId);
 
-		Task<DiscordChannelPacket> CreateDMChannelAsync(ulong userId);
+		ValueTask<DiscordChannelPacket> CreateDMChannelAsync(ulong userId);
 
-		Task<DiscordEmoji> CreateEmojiAsync(ulong guildId, EmojiCreationArgs args);
+		ValueTask<DiscordEmoji> CreateEmojiAsync(ulong guildId, EmojiCreationArgs args);
 
-		Task CreateReactionAsync(ulong channelId, ulong messageId, DiscordEmoji emoji);
+		ValueTask CreateReactionAsync(ulong channelId, ulong messageId, DiscordEmoji emoji);
 
-		Task<DiscordRolePacket> CreateGuildRoleAsync(ulong guildId, CreateRoleArgs args);
+		ValueTask<DiscordRolePacket> CreateGuildRoleAsync(ulong guildId, CreateRoleArgs args);
 
-		Task DeleteChannelAsync(ulong channelId);
+		ValueTask DeleteChannelAsync(ulong channelId);
 
-		Task DeleteGuildAsync(ulong guildId);
+		ValueTask DeleteGuildAsync(ulong guildId);
 
-		Task DeleteReactionAsync(ulong channelId, ulong messageId, DiscordEmoji emoji);
+		ValueTask DeleteReactionAsync(ulong channelId, ulong messageId, DiscordEmoji emoji);
 
-		Task DeleteReactionAsync(ulong channelId, ulong messageId, DiscordEmoji emoji, ulong userId);
+		ValueTask DeleteReactionAsync(ulong channelId, ulong messageId, DiscordEmoji emoji, ulong userId);
 
-		Task DeleteReactionsAsync(ulong channelId, ulong messageId);
+		ValueTask DeleteReactionsAsync(ulong channelId, ulong messageId);
 
-		Task DeleteMessageAsync(ulong channelId, ulong messageId);
+		ValueTask DeleteMessageAsync(ulong channelId, ulong messageId);
 
-		Task DeleteMessagesAsync(ulong channelId, ulong[] messages);
+		ValueTask DeleteMessagesAsync(ulong channelId, ulong[] messages);
 
-		Task<DiscordMessagePacket> EditMessageAsync(ulong channelId, ulong messageId, EditMessageArgs args);
+		ValueTask<DiscordMessagePacket> EditMessageAsync(ulong channelId, ulong messageId, EditMessageArgs args);
 
-		Task<DiscordRolePacket> EditRoleAsync(ulong guildId, DiscordRolePacket role);
+		ValueTask<DiscordRolePacket> EditRoleAsync(ulong guildId, DiscordRolePacket role);
 
-		Task<DiscordUserPacket> GetCurrentUserAsync();
+		ValueTask<DiscordUserPacket> GetCurrentUserAsync();
 
-		Task<DiscordChannelPacket> GetChannelAsync(ulong channelId);
+		ValueTask<DiscordChannelPacket> GetChannelAsync(ulong channelId);
 
-		Task<DiscordChannelPacket[]> GetChannelsAsync(ulong guildId);
+		ValueTask<DiscordChannelPacket[]> GetChannelsAsync(ulong guildId);
 
-        Task<DiscordChannelPacket[]> GetDMChannelsAsync();
+        ValueTask<DiscordChannelPacket[]> GetDMChannelsAsync();
 
-        Task<DiscordGuildPacket> GetGuildAsync(ulong guildId);
+        ValueTask<DiscordGuildPacket> GetGuildAsync(ulong guildId);
 
-        Task<DiscordGuildMemberPacket[]> GetGuildMembersAsync(ulong guildId);
+        ValueTask<DiscordGuildMemberPacket[]> GetGuildMembersAsync(ulong guildId);
 
-        Task<DiscordGuildMemberPacket> GetGuildUserAsync(ulong userId, ulong guildId);
+        ValueTask<DiscordGuildMemberPacket> GetGuildUserAsync(ulong userId, ulong guildId);
 
-		Task<DiscordMessagePacket> GetMessageAsync(ulong channelId, ulong messageId);
+		ValueTask<DiscordMessagePacket> GetMessageAsync(ulong channelId, ulong messageId);
 
-		Task<DiscordMessagePacket[]> GetMessagesAsync(ulong channelId, int amount = 100);
+		ValueTask<DiscordMessagePacket[]> GetMessagesAsync(ulong channelId, int amount = 100);
 
-        Task<int> GetPruneCountAsync(ulong guildId, int days);
+        ValueTask<int> GetPruneCountAsync(ulong guildId, int days);
 
-		Task<DiscordUserPacket[]> GetReactionsAsync(ulong channelId, ulong messageId, DiscordEmoji emojiId);
+		ValueTask<DiscordUserPacket[]> GetReactionsAsync(ulong channelId, ulong messageId, DiscordEmoji emojiId);
 
-		Task<DiscordRolePacket> GetRoleAsync(ulong roleId, ulong guildId);
+		ValueTask<DiscordRolePacket> GetRoleAsync(ulong roleId, ulong guildId);
 
-		Task<DiscordRolePacket[]> GetRolesAsync(ulong guildId);
+		ValueTask<DiscordRolePacket[]> GetRolesAsync(ulong guildId);
 
-		Task<DiscordUserPacket> GetUserAsync(ulong userId);
+		ValueTask<DiscordUserPacket> GetUserAsync(ulong userId);
 
-		Task ModifyGuildMemberAsync(ulong guildId, ulong userId, ModifyGuildMemberArgs packet);
+		ValueTask ModifyGuildMemberAsync(ulong guildId, ulong userId, ModifyGuildMemberArgs packet);
 
-        Task ModifySelfAsync(UserModifyArgs args);
+        ValueTask ModifySelfAsync(UserModifyArgs args);
 
-        Task<int?> PruneGuildMembersAsync(ulong guildId, int days, bool computePrunedCount);
+        ValueTask<int?> PruneGuildMembersAsync(ulong guildId, int days, bool computePrunedCount);
 
-		Task RemoveGuildBanAsync(ulong guildId, ulong userId);
+		ValueTask RemoveGuildBanAsync(ulong guildId, ulong userId);
 
-		Task RemoveGuildMemberAsync(ulong guildId, ulong userId, string reason = null);
+		ValueTask RemoveGuildMemberAsync(ulong guildId, ulong userId, string reason = null);
 
-		Task RemoveGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId);
+		ValueTask RemoveGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId);
 
-		Task<DiscordMessagePacket> SendFileAsync(ulong channelId, Stream stream, string fileName, MessageArgs args);
+		ValueTask<DiscordMessagePacket> SendFileAsync(ulong channelId, Stream stream, string fileName, MessageArgs args);
 
-		Task<DiscordMessagePacket> SendMessageAsync(ulong channelId, MessageArgs args);
+		ValueTask<DiscordMessagePacket> SendMessageAsync(ulong channelId, MessageArgs args);
 
-		Task TriggerTypingAsync(ulong channelId);
+		ValueTask TriggerTypingAsync(ulong channelId);
 	}
 }

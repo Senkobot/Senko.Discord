@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 using System.Net.Http;
 using System.Runtime.CompilerServices;
 using Microsoft.Extensions.Options;
+using Senko.Discord.Exceptions;
 using Senko.Discord.Gateway;
 using Senko.Discord.Packets;
 using Senko.Discord.Rest.Http;
-using Senko.Discord.Rest.Exceptions;
 using Senko.Discord.Rest.Http.Factories;
 using HttpClient = Senko.Discord.Rest.Http.HttpClient;
 
@@ -46,7 +46,7 @@ namespace Senko.Discord.Rest
         /// <param name="userId">Id of the user you want to ban</param>
         /// <param name="pruneDays">Amount of days you want to prune messages from the user</param>
         /// <param name="reason">Reason for the ban</param>
-        public async Task AddGuildBanAsync(
+        public async ValueTask AddGuildBanAsync(
             ulong guildId, 
             ulong userId, 
             int pruneDays = 7, 
@@ -75,7 +75,7 @@ namespace Senko.Discord.Rest
         /// <param name="guildId"></param>
         /// <param name="userId"></param>
         /// <param name="roleId"></param>
-        public async Task AddGuildMemberRoleAsync(
+        public async ValueTask AddGuildMemberRoleAsync(
             ulong guildId, 
             ulong userId, 
             ulong roleId)
@@ -90,7 +90,7 @@ namespace Senko.Discord.Rest
         /// Creates a Direct channel to a user.
         /// </summary>
         /// <param name="userId">Id of the user</param>
-        public async Task<DiscordChannelPacket> CreateDMChannelAsync(
+        public async ValueTask<DiscordChannelPacket> CreateDMChannelAsync(
             ulong userId)
         {
             var response = await RestClient.PostAsync(
@@ -107,7 +107,7 @@ namespace Senko.Discord.Rest
         /// <param name="guildId"></param>
         /// <param name="args"></param>
         /// <returns>The created emoji.</returns>
-        public async Task<DiscordEmoji> CreateEmojiAsync(
+        public async ValueTask<DiscordEmoji> CreateEmojiAsync(
             ulong guildId, 
             EmojiCreationArgs args)
         {
@@ -125,7 +125,7 @@ namespace Senko.Discord.Rest
         /// <param name="guildId">The guild in which you want to create a role.</param>
         /// <param name="args">The properties of the role.</param>
         /// <returns>The role you've created, if successful</returns>
-        public async Task<DiscordRolePacket> CreateGuildRoleAsync(
+        public async ValueTask<DiscordRolePacket> CreateGuildRoleAsync(
             ulong guildId, 
             CreateRoleArgs args)
         {
@@ -137,7 +137,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordRolePacket>(response.Body);
         }
 
-        public async Task CreateReactionAsync(
+        public async ValueTask CreateReactionAsync(
             ulong channelId, 
             ulong messageId, 
             DiscordEmoji emoji)
@@ -148,7 +148,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task DeleteChannelAsync(
+        public async ValueTask DeleteChannelAsync(
             ulong channelId)
         {
             var response = await RestClient.DeleteAsync(
@@ -157,7 +157,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task DeleteGuildAsync(
+        public async ValueTask DeleteGuildAsync(
             ulong guildId)
         {
             var response = await RestClient.DeleteAsync(
@@ -166,7 +166,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task DeleteEmojiAsync(
+        public async ValueTask DeleteEmojiAsync(
             ulong guildId, 
             ulong emojiId)
         {
@@ -176,7 +176,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task DeleteMessageAsync(
+        public async ValueTask DeleteMessageAsync(
             ulong channelId, 
             ulong messageId)
         {
@@ -186,7 +186,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task DeleteMessagesAsync(
+        public async ValueTask DeleteMessagesAsync(
             ulong channelId, 
             params ulong[] messageId)
         {
@@ -197,7 +197,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task DeleteReactionAsync(
+        public async ValueTask DeleteReactionAsync(
             ulong channelId, 
             ulong messageId, 
             DiscordEmoji emoji)
@@ -208,7 +208,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task DeleteReactionAsync(
+        public async ValueTask DeleteReactionAsync(
             ulong channelId, 
             ulong messageId, 
             DiscordEmoji emoji, 
@@ -220,7 +220,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task DeleteReactionsAsync(
+        public async ValueTask DeleteReactionsAsync(
             ulong channelId, 
             ulong messageId)
         {
@@ -230,7 +230,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task<DiscordEmoji> EditEmojiAsync(
+        public async ValueTask<DiscordEmoji> EditEmojiAsync(
             ulong guildId, 
             ulong emojiId, 
             EmojiModifyArgs args)
@@ -248,7 +248,7 @@ namespace Senko.Discord.Rest
             RestClient.Dispose();
         }
 
-        public async Task<DiscordMessagePacket> EditMessageAsync(
+        public async ValueTask<DiscordMessagePacket> EditMessageAsync(
             ulong channelId, 
             ulong messageId, 
             EditMessageArgs args)
@@ -261,7 +261,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordMessagePacket>(response.Body);
         }
 
-        public async Task<DiscordRolePacket> EditRoleAsync(
+        public async ValueTask<DiscordRolePacket> EditRoleAsync(
             ulong guildId,
             DiscordRolePacket role)
         {
@@ -273,7 +273,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordRolePacket>(response.Body);
         }
 
-        public async Task<DiscordUserPacket> GetCurrentUserAsync()
+        public async ValueTask<DiscordUserPacket> GetCurrentUserAsync()
         {
             var response = await RestClient.GetAsync(
                 DiscordApiRoutes.UserMe())
@@ -282,7 +282,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordUserPacket>(response.Body);
         }
 
-        public async Task<DiscordChannelPacket> GetChannelAsync(
+        public async ValueTask<DiscordChannelPacket> GetChannelAsync(
             ulong channelId)
         {
             var response = await RestClient.GetAsync(
@@ -292,7 +292,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordChannelPacket>(response.Body);
         }
 
-        public async Task<DiscordChannelPacket[]> GetChannelsAsync(ulong guildId)
+        public async ValueTask<DiscordChannelPacket[]> GetChannelsAsync(ulong guildId)
         {
             var response = await RestClient.GetAsync(
                 DiscordApiRoutes.GuildChannels(guildId))
@@ -301,7 +301,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordChannelPacket[]>(response.Body);
         }
 
-        public async Task<DiscordChannelPacket[]> GetDMChannelsAsync()
+        public async ValueTask<DiscordChannelPacket[]> GetDMChannelsAsync()
         {
             var response = await RestClient.GetAsync(
                 DiscordApiRoutes.UserMeChannels())
@@ -310,7 +310,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordChannelPacket[]>(response.Body);
         }
 
-        public async Task<DiscordEmoji> GetEmojiAsync(
+        public async ValueTask<DiscordEmoji> GetEmojiAsync(
             ulong guildId, 
             ulong emojiId)
         {
@@ -321,7 +321,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordEmoji>(response.Body);
         }
 
-        public async Task<DiscordEmoji[]> GetEmojisAsync(
+        public async ValueTask<DiscordEmoji[]> GetEmojisAsync(
             ulong guildId)
         {
             var response = await RestClient.GetAsync(
@@ -331,7 +331,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordEmoji[]>(response.Body);
         }
 
-        public async Task<DiscordGuildPacket> GetGuildAsync(
+        public async ValueTask<DiscordGuildPacket> GetGuildAsync(
             ulong guildId)
         {
             var response = await RestClient.GetAsync(
@@ -341,7 +341,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordGuildPacket>(response.Body);
         }
 
-        public async Task<DiscordGuildMemberPacket[]> GetGuildMembersAsync(ulong guildId)
+        public async ValueTask<DiscordGuildMemberPacket[]> GetGuildMembersAsync(ulong guildId)
         {
             var items = new List<DiscordGuildMemberPacket>();
             ulong? lastId = null;
@@ -372,7 +372,7 @@ namespace Senko.Discord.Rest
             return items.ToArray();
         }
 
-        public async Task<DiscordGuildMemberPacket> GetGuildUserAsync(
+        public async ValueTask<DiscordGuildMemberPacket> GetGuildUserAsync(
             ulong userId, 
             ulong guildId)
         {
@@ -383,7 +383,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordGuildMemberPacket>(response.Body);
         }
 
-        public async Task<DiscordMessagePacket> GetMessageAsync(
+        public async ValueTask<DiscordMessagePacket> GetMessageAsync(
             ulong channelId, 
             ulong messageId)
         {
@@ -394,7 +394,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordMessagePacket>(response.Body);
         }
 
-        public async Task<DiscordMessagePacket[]> GetMessagesAsync(ulong channelId,
+        public async ValueTask<DiscordMessagePacket[]> GetMessagesAsync(ulong channelId,
             int amount = 100)
         {
             QueryString qs = new QueryString();
@@ -408,7 +408,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordMessagePacket[]>(response.Body);
         }
 
-        public async Task<int> GetPruneCountAsync(
+        public async ValueTask<int> GetPruneCountAsync(
             ulong guildId,
             int days)
         {
@@ -428,7 +428,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordPruneObject>(response.Body).Pruned;
         }
 
-        public async Task<DiscordUserPacket[]> GetReactionsAsync(
+        public async ValueTask<DiscordUserPacket[]> GetReactionsAsync(
             ulong channelId, 
             ulong messageId, 
             DiscordEmoji emoji)
@@ -440,7 +440,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordUserPacket[]>(response.Body);
         }
 
-        public async Task<DiscordRolePacket> GetRoleAsync(
+        public async ValueTask<DiscordRolePacket> GetRoleAsync(
             ulong roleId, 
             ulong guildId)
         {
@@ -451,7 +451,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordRolePacket>(response.Body);
         }
 
-        public async Task<DiscordRolePacket[]> GetRolesAsync(ulong guildId)
+        public async ValueTask<DiscordRolePacket[]> GetRolesAsync(ulong guildId)
         {
             var response = await RestClient.GetAsync(
                 DiscordApiRoutes.GuildRoles(guildId))
@@ -460,7 +460,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordRolePacket[]>(response.Body);
         }
 
-        public async Task<DiscordUserPacket> GetUserAsync(ulong userId)
+        public async ValueTask<DiscordUserPacket> GetUserAsync(ulong userId)
         {
             var response = await RestClient.GetAsync(
                 DiscordApiRoutes.User(userId))
@@ -469,7 +469,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordUserPacket>(response.Body);
         }
 
-        public async Task ModifySelfAsync(UserModifyArgs args)
+        public async ValueTask ModifySelfAsync(UserModifyArgs args)
         {
             if (args.Avatar.Type == ImageType.WEBP)
             {
@@ -483,7 +483,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task ModifyGuildMemberAsync(
+        public async ValueTask ModifyGuildMemberAsync(
             ulong guildId, 
             ulong userId, 
             ModifyGuildMemberArgs packet)
@@ -495,7 +495,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task<int?> PruneGuildMembersAsync(
+        public async ValueTask<int?> PruneGuildMembersAsync(
             ulong guildId, 
             int days, 
             bool computePruneCount = false)
@@ -522,7 +522,7 @@ namespace Senko.Discord.Rest
             return null;
         }
 
-        public async Task RemoveGuildBanAsync(
+        public async ValueTask RemoveGuildBanAsync(
             ulong guildId, 
             ulong userId)
         {
@@ -532,7 +532,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task RemoveGuildMemberAsync(
+        public async ValueTask RemoveGuildMemberAsync(
             ulong guildId, 
             ulong userId, 
             string reason = null)
@@ -550,7 +550,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task RemoveGuildMemberRoleAsync(
+        public async ValueTask RemoveGuildMemberRoleAsync(
             ulong guildId, 
             ulong userId, 
             ulong roleId)
@@ -561,7 +561,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task<DiscordMessagePacket> SendFileAsync(
+        public async ValueTask<DiscordMessagePacket> SendFileAsync(
             ulong channelId, 
             Stream stream, 
             string fileName, 
@@ -609,7 +609,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordMessagePacket>(response.Body);
         }
 
-        public async Task<DiscordMessagePacket> SendMessageAsync(ulong channelId, MessageArgs args)
+        public async ValueTask<DiscordMessagePacket> SendMessageAsync(ulong channelId, MessageArgs args)
         {
             if (args.Content == string.Empty)
             {
@@ -623,7 +623,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordMessagePacket>(response.Body);
         }
 
-        public async Task TriggerTypingAsync(ulong channelId)
+        public async ValueTask TriggerTypingAsync(ulong channelId)
         {
             var response = await RestClient.PostAsync(
                 DiscordApiRoutes.ChannelTyping(channelId))
@@ -631,7 +631,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async Task<GatewayConnectionPacket> GetGatewayAsync()
+        public async ValueTask<GatewayConnectionPacket> GetGatewayAsync()
         {
             var response = await RestClient.GetAsync(
                 DiscordApiRoutes.Gateway())
@@ -640,7 +640,7 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<GatewayConnectionPacket>(response.Body);
         }
 
-        public async Task<GatewayConnectionPacket> GetGatewayBotAsync()
+        public async ValueTask<GatewayConnectionPacket> GetGatewayBotAsync()
         {
             var response = await RestClient.GetAsync(
                 DiscordApiRoutes.BotGateway())
@@ -654,7 +654,9 @@ namespace Senko.Discord.Rest
         {
             if (!response.Success)
             {
-                throw new DiscordRestException(JsonHelper.Deserialize<DiscordRestError>(response.Body));
+                var error = JsonHelper.Deserialize<DiscordRestError>(response.Body);
+
+                throw new DiscordRestException(error.Message, error.Code);
             }
         }
     }

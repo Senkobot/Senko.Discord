@@ -26,7 +26,7 @@ namespace Senko.Discord.Http
             _cache = cache;
         }
 
-        public async Task<bool> CanStartRequestAsync(RequestMethod method, string requestUri)
+        public async ValueTask<bool> CanStartRequestAsync(string method, string requestUri)
         {
             string key = GetCacheKey(requestUri.Split('/')[0], requestUri.Split('/')[1]);
 
@@ -46,7 +46,7 @@ namespace Senko.Discord.Http
             return !rateLimit.IsRatelimited();
         }
 
-        public Task OnRequestSuccessAsync(HttpResponse response)
+        public ValueTask OnRequestSuccessAsync(HttpResponse response)
         {
             var httpMessage = response.HttpResponseMessage;
 
@@ -56,32 +56,32 @@ namespace Senko.Discord.Http
 
             if (!httpMessage.Headers.Contains(LimitHeader))
             {
-                return Task.CompletedTask;
+                return default;
             }
 
             var rateLimit = new Ratelimit();
 
             if (httpMessage.Headers.TryGetValues(RemainingHeader, out var values))
             {
-                rateLimit.Remaining = int.Parse(values.FirstOrDefault());
+                rateLimit.Remaining = int.Parse(values.First());
             }
 
             if (httpMessage.Headers.TryGetValues(LimitHeader, out var limitValues))
             {
-                rateLimit.Limit = int.Parse(limitValues.FirstOrDefault());
+                rateLimit.Limit = int.Parse(limitValues.First());
             }
 
             if (httpMessage.Headers.TryGetValues(ResetHeader, out var resetValues))
             {
-                rateLimit.Reset = int.Parse(resetValues.FirstOrDefault());
+                rateLimit.Reset = int.Parse(resetValues.First());
             }
 
             if (httpMessage.Headers.TryGetValues(GlobalHeader, out var globalValues))
             {
-                rateLimit.Global = int.Parse(globalValues.FirstOrDefault());
+                rateLimit.Global = int.Parse(globalValues.First());
             }
 
-            return _cache.SetAsync(key, rateLimit);
+            return new ValueTask(_cache.SetAsync(key, rateLimit));
         }
     }
 }

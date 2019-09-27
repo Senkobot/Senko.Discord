@@ -10,12 +10,12 @@ namespace Senko.Discord.Internal
             : base(user, client)
         { }
 
-        public Task<IDiscordChannel> GetDMChannelsAsync()
+        public ValueTask<IDiscordChannel> GetDMChannelsAsync()
         {
             throw new NotImplementedException();
         }
 
-        public async Task ModifyAsync(Action<UserModifyArgs> modifyArgs)
+        public async ValueTask ModifyAsync(Action<UserModifyArgs> modifyArgs)
         {
             var args = new UserModifyArgs();
             modifyArgs(args);

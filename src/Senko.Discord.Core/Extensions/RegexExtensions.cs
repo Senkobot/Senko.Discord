@@ -8,7 +8,7 @@ namespace Senko.Discord
 {
     internal static class RegexExtensions
     {
-        public static async Task<string> ReplaceAsync(this Regex regex, string input, Func<Match, Task<string>> replacementFn)
+        public static async ValueTask<string> ReplaceAsync(this Regex regex, string input, Func<Match, ValueTask<string>> replacementFn)
         {
             if (input == null)
             {

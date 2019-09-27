@@ -33,7 +33,7 @@ namespace Senko.Discord.Gateway
 
         public IReadOnlyCollection<IDiscordGateway> Shards => _shards;
 
-        public async Task SendAsync(int shardId, GatewayOpcode opCode, object payload)
+        public async ValueTask SendAsync(int shardId, GatewayOpcode opCode, object payload)
         {
             if (!_initialized)
             {
@@ -48,7 +48,7 @@ namespace Senko.Discord.Gateway
             await _shards[shardId].SendAsync(shardId, opCode, payload);
         }
 
-        public async Task RestartAsync()
+        public async ValueTask RestartAsync()
         {
             if (!_initialized)
             {
@@ -61,7 +61,7 @@ namespace Senko.Discord.Gateway
             }
         }
 
-        public async Task StartAsync()
+        public async ValueTask StartAsync()
         {
             await _initializeLock.WaitAsync();
 
@@ -89,7 +89,7 @@ namespace Senko.Discord.Gateway
                 // Start the shards.
                 _initialized = true;
 
-                await Task.WhenAll(_shards.Select(s => s.StartAsync()));
+                await Task.WhenAll(_shards.Select(s => s.StartAsync().AsTask()));
             }
             finally
             {
@@ -98,14 +98,14 @@ namespace Senko.Discord.Gateway
 
         }
 
-        public Task StopAsync()
+        public ValueTask StopAsync()
         {
             if (!_initialized)
             {
                 throw new InvalidOperationException("The cluster is not started yet.");
             }
 
-            return Task.WhenAll(_shards.Select(s => s.StopAsync()));
+            return new ValueTask(Task.WhenAll(_shards.Select(s => s.StopAsync().AsTask())));
         }
     }
 }
