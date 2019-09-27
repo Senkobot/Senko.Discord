@@ -9,11 +9,6 @@ namespace Senko.Discord.Example
 {
     internal class Program
     {
-        /// <summary>
-        /// The Bot token.
-        /// </summary>
-        private const string Token = "NTgwNTAyODkzNjU2OTMyMzYy.XYVhmg.uUrpZL4HgTWKh0KoGjBgHczDL4E";
-
         public static async Task Main(string[] args)
         {
             var provider = CreateServiceProvider();
@@ -37,7 +32,7 @@ namespace Senko.Discord.Example
 
             services.AddDiscord(options =>
             {
-                options.Token = Token;
+                options.Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
             });
 
             services.AddLogging(builder =>
