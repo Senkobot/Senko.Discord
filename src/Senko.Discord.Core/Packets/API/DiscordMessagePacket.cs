@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Senko.Discord.Packets
 {
@@ -8,39 +9,51 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class DiscordMessagePacket
 	{
-		[DataMember(Name = "id", Order = 1)]
+		[JsonPropertyName("id")]
+[DataMember(Name = "id", Order = 1)]
 		public ulong Id { get; set; }
 
+        [JsonPropertyName("channel_id")]
         [DataMember(Name = "channel_id", Order = 2)]
         public ulong ChannelId { get; set; }
 
+        [JsonPropertyName("guild_id")]
         [DataMember(Name = "guild_id", Order = 3)]
         public ulong? GuildId { get; set; }
 
+        [JsonPropertyName("author")]
         [DataMember(Name = "author", Order = 4)]
         public DiscordUserPacket Author { get; set; }
 
+        [JsonPropertyName("member")]
         [DataMember(Name = "member", Order = 5)]
         public DiscordGuildMemberPacket Member { get; set; }
 
+        [JsonPropertyName("type")]
         [DataMember(Name = "type", Order = 6)]
 		public DiscordMessageType Type { get; set; }
 
-		[DataMember(Name = "content", Order = 7)]
+		[JsonPropertyName("content")]
+[DataMember(Name = "content", Order = 7)]
 		public string Content { get; set; }
 
-		[DataMember(Name = "timestamp", Order = 8)]
+		[JsonPropertyName("timestamp")]
+[DataMember(Name = "timestamp", Order = 8)]
 		public DateTimeOffset Timestamp { get; set; }
 
-		[DataMember(Name = "tts", Order = 9)]
+		[JsonPropertyName("tts")]
+[DataMember(Name = "tts", Order = 9)]
 		public bool IsTTS { get; set; }
 
-		[DataMember(Name = "mention_everyone", Order = 10)]
+		[JsonPropertyName("mention_everyone")]
+[DataMember(Name = "mention_everyone", Order = 10)]
 		public bool MentionsEveryone { get; set; }
 
-		[DataMember(Name = "mentions", Order = 11)]
+		[JsonPropertyName("mentions")]
+[DataMember(Name = "mentions", Order = 11)]
 		public List<DiscordUserPacket> Mentions { get; set; }
 
+        [JsonPropertyName("attachments")]
         [DataMember(Name = "attachments", Order = 12)]
         public List<DiscordAttachmentPacket> Attachments { get; set; }
 	}

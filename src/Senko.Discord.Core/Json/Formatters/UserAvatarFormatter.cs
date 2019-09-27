@@ -1,39 +1,19 @@
 ﻿using System;
-using SpanJson;
-using SpanJson.Formatters;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Senko.Discord.Json.Formatters
 {
-    public sealed class UserAvatarFormatter : ICustomJsonFormatter<UserAvatar>
+    public sealed class UserAvatarFormatter : JsonConverter<UserAvatar>
     {
-        public static readonly UserAvatarFormatter Default = new UserAvatarFormatter();
-
-        public object Arguments { get; set; }
-
-        public void Serialize(ref JsonWriter<char> writer, UserAvatar value)
-        {
-            var imageData = Convert.ToBase64String(value.Stream.GetBuffer());
-            var data = $"data:image/{value.Type.ToString().ToLower()};base64,{imageData}";
-
-            StringUtf16Formatter.Default.Serialize(ref writer, data);
-        }
-
-        public UserAvatar Deserialize(ref JsonReader<char> reader)
+        public override UserAvatar Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
         {
             throw new NotSupportedException();
         }
 
-        public void Serialize(ref JsonWriter<byte> writer, UserAvatar value)
+        public override void Write(Utf8JsonWriter writer, UserAvatar value, JsonSerializerOptions options)
         {
-            var imageData = Convert.ToBase64String(value.Stream.GetBuffer());
-            var data = $"data:image/{value.Type.ToString().ToLower()};base64,{imageData}";
-
-            StringUtf8Formatter.Default.Serialize(ref writer, data);
-        }
-
-        public UserAvatar Deserialize(ref JsonReader<byte> reader)
-        {
-            throw new NotSupportedException();
+            writer.WriteBase64StringValue(value.Stream.GetBuffer());
         }
     }
 }

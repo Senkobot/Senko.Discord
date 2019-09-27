@@ -27,7 +27,7 @@ namespace Senko.Discord.Gateway.Connection
     
     public class GatewayConnection
     {
-        public event Func<GatewayMessageIdentifier, ReadOnlyMemory<byte>, Task> Dispatch;
+        public event Func<GatewayMessageIdentifier, ReadOnlyMemory<byte>, ValueTask> Dispatch;
 
         private ClientWebSocket _webSocketClient;
         private readonly DiscordOptions _configuration;
@@ -292,14 +292,14 @@ namespace Senko.Discord.Gateway.Connection
         ///     Handle the incoming data.
         /// </summary>
         /// <param name="data">The uncompressed data.</param>
-        private Task HandleMessageAsync(ReadOnlyMemory<byte> data)
+        private ValueTask HandleMessageAsync(ReadOnlyMemory<byte> data)
         {
             var identifier = GatewayMessageIdentifier.Read(data.Span);
 
             if (!identifier.OpCode.HasValue)
             {
                 _logger.LogWarning("Received a message that could not be read by the gateway: {Json}", Encoding.UTF8.GetString(data.ToArray()));
-                return Task.CompletedTask;
+                return default;
             }
 
             _logger.LogTrace("Received packet with OpCode {OpCode} (event: {EventName}, size: {Size})", identifier.OpCode, identifier.EventName ?? "<null>", data.Length);
@@ -319,13 +319,13 @@ namespace Senko.Discord.Gateway.Connection
 
                 case GatewayOpcode.HeartbeatAcknowledge:
                     _heartbeatLock.Release();
-                    return Task.CompletedTask;
+                    return default;
 
                 case GatewayOpcode.Hello:
                 {
                     var packet = JsonHelper.Deserialize<GatewayMessage<GatewayHelloPacket>>(data.Span);
                     _heartbeatTask = HeartbeatAsync(packet.Data.HeartbeatInterval);
-                    return Task.CompletedTask;
+                    return default;
                 }
 
                 case GatewayOpcode.InvalidSession:
@@ -343,7 +343,7 @@ namespace Senko.Discord.Gateway.Connection
 
                 default:
                     _logger.LogWarning("Unhandled OpCode {OpCode}.", identifier.OpCode);
-                    return Task.CompletedTask;
+                    return default;
             }
         }
 
@@ -406,7 +406,7 @@ namespace Senko.Discord.Gateway.Connection
                 .ConfigureAwait(false);
         }
 
-        public async Task ReconnectAsync(int initialDelay = 1000, bool shouldIncrease = true)
+        public async ValueTask ReconnectAsync(int initialDelay = 1000, bool shouldIncrease = true)
         {
             var delay = initialDelay;
             bool connected = false;
@@ -437,7 +437,7 @@ namespace Senko.Discord.Gateway.Connection
             }
         }
 
-        public Task SendCommandAsync<T>(GatewayOpcode opcode, T data, CancellationToken token = default)
+        public ValueTask SendCommandAsync<T>(GatewayOpcode opcode, T data, CancellationToken token = default)
         {
             var msg = new GatewayMessage<T>
             {
@@ -450,26 +450,24 @@ namespace Senko.Discord.Gateway.Connection
             return SendCommandAsync(msg, token);
         }
 
-        private async Task SendCommandAsync<T>(GatewayMessage<T> msg, CancellationToken token)
+        private async ValueTask SendCommandAsync<T>(GatewayMessage<T> msg, CancellationToken token)
         {
-            var json = JsonHelper.SerializeFromPool(msg);
+            var json = JsonHelper.Serialize(msg);
 
-            _logger.LogTrace("Sending packet with OpCode {OpCode} (event: {EventName}, size: {Size})", msg.OpCode, msg.EventName ?? "<null>", json.Count);
+            _logger.LogTrace("Sending packet with OpCode {OpCode} (event: {EventName}, size: {Size})", msg.OpCode, msg.EventName ?? "<null>", json.Length);
 
             await _webSocketClient.SendAsync(json, WebSocketMessageType.Text, true, token);
-
-            JsonHelper.ReturnToPool(json);
         }
 
-        private async Task SendHeartbeatAsync()
+        private ValueTask SendHeartbeatAsync()
         {
             var msg = new GatewayMessage<int?>
             {
                 OpCode = GatewayOpcode.Heartbeat,
                 Data = SequenceNumber
             };
-            await SendCommandAsync(msg, _connectionToken.Token)
-                .ConfigureAwait(false);
+
+            return SendCommandAsync(msg, _connectionToken.Token);
         }
         
         /// <summary>

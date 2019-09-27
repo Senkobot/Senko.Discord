@@ -8,44 +8,44 @@ namespace Senko.Discord
 {
     public interface IDiscordEventHandler
     {
-        Task OnGuildJoin(IDiscordGuild guild);
+        ValueTask OnGuildJoin(IDiscordGuild guild);
 
-        Task OnGuildUpdate(IDiscordGuild guild);
+        ValueTask OnGuildUpdate(IDiscordGuild guild);
 
-        Task OnUserUpdate(IDiscordUser user);
+        ValueTask OnUserUpdate(IDiscordUser user);
 
-        Task OnChannelCreate(IDiscordChannel channel);
+        ValueTask OnChannelCreate(IDiscordChannel channel);
 
-        Task OnChannelUpdate(IDiscordChannel channel);
+        ValueTask OnChannelUpdate(IDiscordChannel channel);
 
-        Task OnChannelDelete(IDiscordChannel channel);
+        ValueTask OnChannelDelete(IDiscordChannel channel);
 
-        Task OnGuildUnavailable(ulong guildId);
+        ValueTask OnGuildUnavailable(ulong guildId);
 
-        Task OnGuildLeave(ulong guildId);
+        ValueTask OnGuildLeave(ulong guildId);
 
-        Task OnGuildMemberDelete(IDiscordGuildUser member);
+        ValueTask OnGuildMemberDelete(IDiscordGuildUser member);
 
-        Task OnGuildMemberUpdate(IDiscordGuildUser member);
+        ValueTask OnGuildMemberUpdate(IDiscordGuildUser member);
 
-        Task OnGuildMemberCreate(IDiscordGuildUser member);
+        ValueTask OnGuildMemberCreate(IDiscordGuildUser member);
 
-        Task OnGuildRoleCreate(ulong guildId, IDiscordRole role);
+        ValueTask OnGuildRoleCreate(ulong guildId, IDiscordRole role);
 
-        Task OnGuildRoleUpdate(ulong guildId, IDiscordRole role);
+        ValueTask OnGuildRoleUpdate(ulong guildId, IDiscordRole role);
 
-        Task OnGuildRoleDeleted(ulong guildId, IDiscordRole role);
+        ValueTask OnGuildRoleDeleted(ulong guildId, IDiscordRole role);
 
-        Task OnMessageCreate(IDiscordMessage message);
+        ValueTask OnMessageCreate(IDiscordMessage message);
 
-        Task OnMessageUpdate(IDiscordMessage message);
+        ValueTask OnMessageUpdate(IDiscordMessage message);
 
-        Task OnMessageDeleted(ulong channelId, ulong messageId);
+        ValueTask OnMessageDeleted(ulong channelId, ulong messageId);
 
-        Task OnMessageEmojiCreated(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji);
+        ValueTask OnMessageEmojiCreated(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji);
 
-        Task OnMessageEmojiDeleted(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji);
+        ValueTask OnMessageEmojiDeleted(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji);
 
-        Task OnGuildMemberRolesUpdate(IDiscordGuildUser member);
+        ValueTask OnGuildMemberRolesUpdate(IDiscordGuildUser member);
     }
 }

@@ -49,7 +49,7 @@ namespace Senko.Discord
 
         private static bool ValidateCache(DiscordUserPacket p) => !string.IsNullOrEmpty(p.Username);
 
-        protected override Task<DiscordChannelPacket> GetChannelPacketAsync(ulong id)
+        protected override ValueTask<DiscordChannelPacket> GetChannelPacketAsync(ulong id)
         {
             return GetOrLoadAsync(
                 CacheKey.Channel(id),
@@ -58,7 +58,7 @@ namespace Senko.Discord
             );
         }
 
-        protected override Task<DiscordGuildMemberPacket[]> GetGuildMembersPacketAsync(ulong guildId)
+        protected override ValueTask<DiscordGuildMemberPacket[]> GetGuildMembersPacketAsync(ulong guildId)
         {
             return GetOrLoadListAsync(
                 CacheKey.GuildMemberIdList(guildId),
@@ -72,7 +72,7 @@ namespace Senko.Discord
             );
         }
 
-        protected override Task<DiscordChannelPacket[]> GetGuildChannelPacketsAsync(ulong guildId)
+        protected override ValueTask<DiscordChannelPacket[]> GetGuildChannelPacketsAsync(ulong guildId)
         {
             return GetOrLoadListAsync(
                 CacheKey.ChannelIdList(guildId), 
@@ -82,7 +82,7 @@ namespace Senko.Discord
             );
         }
 
-        protected override Task<DiscordGuildMemberPacket> GetGuildMemberPacketAsync(ulong userId, ulong guildId)
+        protected override ValueTask<DiscordGuildMemberPacket> GetGuildMemberPacketAsync(ulong userId, ulong guildId)
         {
             return GetOrLoadAsync(
                 CacheKey.GuildMember(guildId, userId),
@@ -92,7 +92,7 @@ namespace Senko.Discord
             );
         }
 
-        protected override Task<DiscordRolePacket> GetRolePacketAsync(ulong roleId, ulong guildId)
+        protected override ValueTask<DiscordRolePacket> GetRolePacketAsync(ulong roleId, ulong guildId)
         {
             return GetOrLoadAsync(
                 CacheKey.GuildRole(guildId, roleId),
@@ -101,7 +101,7 @@ namespace Senko.Discord
             );
         }
 
-        protected override Task<DiscordRolePacket[]> GetRolePacketsAsync(ulong guildId)
+        protected override ValueTask<DiscordRolePacket[]> GetRolePacketsAsync(ulong guildId)
         {
             return GetOrLoadListAsync(
                 CacheKey.GuildRoleIdList(guildId),
@@ -111,7 +111,7 @@ namespace Senko.Discord
             );
         }
 
-        protected override Task<DiscordGuildPacket> GetGuildPacketAsync(ulong id)
+        protected override ValueTask<DiscordGuildPacket> GetGuildPacketAsync(ulong id)
         {
             return GetOrLoadAsync(
                 CacheKey.Guild(id),
@@ -120,7 +120,7 @@ namespace Senko.Discord
             );
         }
 
-        protected override Task<DiscordUserPacket> GetUserPacketAsync(ulong id)
+        protected override ValueTask<DiscordUserPacket> GetUserPacketAsync(ulong id)
         {
             return GetOrLoadAsync(
                 CacheKey.User(id),
@@ -129,11 +129,11 @@ namespace Senko.Discord
             );
         }
 
-        protected override Task<DiscordUserPacket> GetCurrentUserPacketAsync()
+        protected override ValueTask<DiscordUserPacket> GetCurrentUserPacketAsync()
         {
             if (!CurrentUserId.HasValue)
             {
-                return Task.FromResult<DiscordUserPacket>(default);
+                return default;
             }
 
             return GetOrLoadAsync(
@@ -143,10 +143,10 @@ namespace Senko.Discord
             );
         }
 
-        private async Task<T[]> GetOrLoadListAsync<T>(
+        private async ValueTask<T[]> GetOrLoadListAsync<T>(
             string listName,
             Func<ulong, string> cacheName,
-            Func<Task<T[]>> retrieveFunc,
+            Func<ValueTask<T[]>> retrieveFunc,
             Func<T, bool> cacheValidator,
             Func<IReadOnlyList<T>, IEnumerable<Task>> storeFunc = null
         ) where T : ISnowflake
@@ -192,9 +192,9 @@ namespace Senko.Discord
             };
         }
 
-        private async Task<T> GetOrLoadAsync<T>(
+        private async ValueTask<T> GetOrLoadAsync<T>(
             string cacheName,
-            Func<Task<T>> retrieveFunc,
+            Func<ValueTask<T>> retrieveFunc,
             Func<T, bool> cacheValidator,
             Func<T, Task> storeFunc = null
         ) where T : ISnowflake

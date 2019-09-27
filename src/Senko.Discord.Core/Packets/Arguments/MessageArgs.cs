@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Senko.Discord.Packets
 {
@@ -15,11 +16,13 @@ namespace Senko.Discord.Packets
             Embed = embed;
         }
 
+        [JsonPropertyName("content")]
         [DataMember(Name = "content")]
-        public string Content;
+        public string Content { get; set; }
 
+        [JsonPropertyName("embed")]
         [DataMember(Name = "embed")]
-        public DiscordEmbed Embed;
+        public DiscordEmbed Embed { get; set; }
     }
 
     [DataContract]
@@ -35,7 +38,8 @@ namespace Senko.Discord.Packets
             TextToSpeech = tts;
         }
 
+        [JsonPropertyName("tts")]
         [DataMember(Name = "tts")]
-        public bool TextToSpeech;
-	}
+        public bool TextToSpeech { get; set; }
+    }
 }

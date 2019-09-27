@@ -23,7 +23,7 @@ namespace Senko.Discord
             CacheClient = cacheClient;
         }
 
-        public async Task OnChannelCreate(DiscordChannelPacket packet)
+        public async ValueTask OnChannelCreate(DiscordChannelPacket packet)
         {
             await UpdateChannelCacheAsync(packet);
             
@@ -32,7 +32,7 @@ namespace Senko.Discord
             await EventHandler.OnChannelCreate(channel);
         }
 
-        public async Task OnChannelUpdate(DiscordChannelPacket packet)
+        public async ValueTask OnChannelUpdate(DiscordChannelPacket packet)
         {
             await UpdateChannelCacheAsync(packet);
             
@@ -41,7 +41,7 @@ namespace Senko.Discord
             await EventHandler.OnChannelCreate(channel);
         }
 
-        public async Task OnChannelDelete(DiscordChannelPacket packet)
+        public async ValueTask OnChannelDelete(DiscordChannelPacket packet)
         {
             var channel = await Client.GetChannelAsync(packet.Id, packet.GuildId);
 
@@ -53,7 +53,7 @@ namespace Senko.Discord
             await DeleteChannelCacheAsync(packet);
         }
 
-        public async Task OnGuildCreate(DiscordGuildPacket packet)
+        public async ValueTask OnGuildCreate(DiscordGuildPacket packet)
         {
             await InsertGuildCacheAsync(packet);
             var guild = new DiscordGuild(packet, Client);
@@ -61,7 +61,7 @@ namespace Senko.Discord
             await EventHandler.OnGuildJoin(guild);
         }
 
-        public async Task OnGuildUpdate(DiscordGuildPacket packet)
+        public async ValueTask OnGuildUpdate(DiscordGuildPacket packet)
         {
             var updatedPacket = await UpdateGuildCacheAsync(packet);
             var guild = new DiscordGuild(updatedPacket, Client);
@@ -69,7 +69,7 @@ namespace Senko.Discord
             await EventHandler.OnGuildUpdate(guild);
         }
 
-        public async Task OnGuildDelete(DiscordGuildUnavailablePacket packet)
+        public async ValueTask OnGuildDelete(DiscordGuildUnavailablePacket packet)
         {
             if (packet.IsUnavailable.GetValueOrDefault(false))
             {
@@ -83,7 +83,7 @@ namespace Senko.Discord
             await DeleteGuildCacheAsync(packet);
         }
 
-        public async Task OnGuildMemberAdd(DiscordGuildMemberPacket packet)
+        public async ValueTask OnGuildMemberAdd(DiscordGuildMemberPacket packet)
         {
             await InsertGuildMemberCacheAsync(packet);
             
@@ -92,7 +92,7 @@ namespace Senko.Discord
             await EventHandler.OnGuildMemberCreate(member);
         }
 
-        public async Task OnGuildMemberUpdate(GuildMemberUpdateEventArgs packet)
+        public async ValueTask OnGuildMemberUpdate(GuildMemberUpdateEventArgs packet)
         {
             var updatedPacket = await UpdateGuildMemberCacheAsync(packet);
             var member = new DiscordGuildUser(updatedPacket, Client);
@@ -100,17 +100,17 @@ namespace Senko.Discord
             await EventHandler.OnGuildMemberUpdate(member);
         }
 
-        public Task OnGuildBanAdd(GuildIdUserArgs packet)
+        public ValueTask OnGuildBanAdd(GuildIdUserArgs packet)
         {
-            return Task.CompletedTask;
+            return default;
         }
 
-        public Task OnGuildBanRemove(GuildIdUserArgs packet)
+        public ValueTask OnGuildBanRemove(GuildIdUserArgs packet)
         {
-            return Task.CompletedTask;
+            return default;
         }
 
-        public async Task OnGuildMemberRemove(GuildIdUserArgs packet)
+        public async ValueTask OnGuildMemberRemove(GuildIdUserArgs packet)
         {
             var member = await Client.GetGuildUserAsync(packet.User.Id, packet.GuildId);
 
@@ -122,12 +122,12 @@ namespace Senko.Discord
             await DeleteGuildMemberCacheAsync(packet.GuildId, packet.User);
         }
 
-        public Task OnGuildEmojiUpdate(GuildEmojisUpdateEventArgs packet)
+        public ValueTask OnGuildEmojiUpdate(GuildEmojisUpdateEventArgs packet)
         {
             return UpdateEmojiCacheAsync(packet.GuildId, packet.Emojis);
         }
 
-        public async Task OnGuildRoleCreate(RoleEventArgs packet)
+        public async ValueTask OnGuildRoleCreate(RoleEventArgs packet)
         {
             await UpdateRoleCacheAsync(packet.GuildId, packet.Role);
             
@@ -136,7 +136,7 @@ namespace Senko.Discord
             await EventHandler.OnGuildRoleCreate(packet.GuildId, role);
         }
 
-        public async Task OnGuildRoleUpdate(RoleEventArgs packet)
+        public async ValueTask OnGuildRoleUpdate(RoleEventArgs packet)
         {
             await UpdateRoleCacheAsync(packet.GuildId, packet.Role);
 
@@ -145,7 +145,7 @@ namespace Senko.Discord
             await EventHandler.OnGuildRoleUpdate(packet.GuildId, role);
         }
 
-        public async Task OnGuildRoleDelete(RoleDeleteEventArgs packet)
+        public async ValueTask OnGuildRoleDelete(RoleDeleteEventArgs packet)
         {
             var role = await Client.GetRoleAsync(packet.GuildId, packet.RoleId);
 
@@ -157,63 +157,65 @@ namespace Senko.Discord
             await DeleteRoleCacheAsync(packet.GuildId, packet.RoleId);
         }
 
-        public Task OnMessageCreate(DiscordMessagePacket packet)
+        public ValueTask OnMessageCreate(DiscordMessagePacket packet)
         {
             var message = new DiscordMessage(packet, Client);
 
             return EventHandler.OnMessageCreate(message);
         }
 
-        public Task OnMessageUpdate(DiscordMessagePacket packet)
+        public ValueTask OnMessageUpdate(DiscordMessagePacket packet)
         {
             var message = new DiscordMessage(packet, Client);
 
             return EventHandler.OnMessageUpdate(message);
         }
 
-        public Task OnMessageDelete(MessageDeleteArgs packet)
+        public ValueTask OnMessageDelete(MessageDeleteArgs packet)
         {
             return EventHandler.OnMessageDeleted(packet.ChannelId, packet.MessageId);
         }
 
-        public Task OnMessageDeleteBulk(MessageBulkDeleteEventArgs packet)
+        public ValueTask OnMessageDeleteBulk(MessageBulkDeleteEventArgs packet)
         {
-            return Task.WhenAll(packet.MessagesDeleted.Select(id => EventHandler.OnMessageDeleted(packet.ChannelId, id)));
+            return new ValueTask(
+                Task.WhenAll(packet.MessagesDeleted.Select(id => EventHandler.OnMessageDeleted(packet.ChannelId, id).AsTask()))
+            );
         }
 
-        public Task OnMessageReactionAdd(MessageReactionArgs packet)
+        public ValueTask OnMessageReactionAdd(MessageReactionArgs packet)
         {
             return EventHandler.OnMessageEmojiCreated(packet.GuildId, packet.ChannelId, packet.MessageId, packet.Emoji);
         }
 
-        public Task OnMessageReactionRemove(MessageReactionArgs packet)
+        public ValueTask OnMessageReactionRemove(MessageReactionArgs packet)
         {
             return EventHandler.OnMessageEmojiDeleted(packet.GuildId, packet.ChannelId, packet.MessageId, packet.Emoji);
         }
 
-        public Task OnPresenceUpdate(DiscordPresencePacket packet)
+        public ValueTask OnPresenceUpdate(DiscordPresencePacket packet)
         {
             return UpdatePresenceAsync(packet);
         }
 
-        public Task OnReady(GatewayReadyPacket packet)
+        public ValueTask OnReady(GatewayReadyPacket packet)
         {
             Client.CurrentUserId = packet.CurrentUser.Id;
 
             return InitializeCacheAsync(packet);
         }
 
-        public Task OnResume(GatewayReadyPacket packet)
+        public ValueTask OnResume(GatewayReadyPacket packet)
         {
-            return Task.CompletedTask;
+            return default;
         }
 
-        public Task OnTypingStart(TypingStartEventArgs packet)
+        public ValueTask OnTypingStart(TypingStartEventArgs packet)
         {
-            return Task.CompletedTask;
+            return default;
         }
 
-        public async Task OnUserUpdate(DiscordUserPacket packet)
+        public async ValueTask OnUserUpdate(DiscordUserPacket packet)
         {
             await UpdateUserCacheAsync(packet);
             
@@ -222,7 +224,7 @@ namespace Senko.Discord
             await EventHandler.OnUserUpdate(user);
         }
 
-        private async Task UpdateEmojiCacheAsync(ulong guildId, DiscordEmoji[] emojis)
+        private async ValueTask UpdateEmojiCacheAsync(ulong guildId, DiscordEmoji[] emojis)
         {
             var cacheKey = CacheKey.Guild(guildId);
             var cache = await CacheClient.GetAsync<DiscordGuildPacket>(cacheKey);
@@ -237,17 +239,17 @@ namespace Senko.Discord
             await CacheClient.SetAsync(cacheKey, guild);
         }
 
-        private Task DeleteRoleCacheAsync(ulong guildId, ulong roleId)
+        private ValueTask DeleteRoleCacheAsync(ulong guildId, ulong roleId)
         {
-            return CacheClient.RemoveAsync(CacheKey.GuildRole(guildId, roleId));
+            return new ValueTask(CacheClient.RemoveAsync(CacheKey.GuildRole(guildId, roleId)));
         }
 
-        private Task UpdateRoleCacheAsync(ulong guildId, DiscordRolePacket role)
+        private ValueTask UpdateRoleCacheAsync(ulong guildId, DiscordRolePacket role)
         {
-            return CacheClient.SetAsync(CacheKey.GuildRole(guildId, role.Id), role);
+            return new ValueTask(CacheClient.SetAsync(CacheKey.GuildRole(guildId, role.Id), role));
         }
 
-        private Task InitializeCacheAsync(GatewayReadyPacket ready)
+        private ValueTask InitializeCacheAsync(GatewayReadyPacket ready)
         {
             var readyPackets = new KeyValuePair<string, DiscordGuildPacket>[ready.Guilds.Length];
 
@@ -256,18 +258,18 @@ namespace Senko.Discord
                 readyPackets[i] = new KeyValuePair<string, DiscordGuildPacket>(ready.Guilds[i].Id.ToString(), ready.Guilds[i]);
             }
 
-            return Task.WhenAll(
+            return new ValueTask(Task.WhenAll(
                 CacheClient.SetAllAsync(ready.Guilds.GroupBy(g => g.Id).ToDictionary(g => CacheKey.Guild(g.Key), g => g.First())),
                 CacheClient.SetAsync(CacheKey.User(ready.CurrentUser.Id), ready.CurrentUser)
-            );
+            ));
         }
 
-        private Task UpdateUserCacheAsync(DiscordUserPacket user)
+        private ValueTask UpdateUserCacheAsync(DiscordUserPacket user)
         {
-            return CacheClient.SetAsync(CacheKey.User(user.Id), user);
+            return new ValueTask(CacheClient.SetAsync(CacheKey.User(user.Id), user));
         }
 
-        private async Task UpdatePresenceAsync(DiscordPresencePacket packet)
+        private async ValueTask UpdatePresenceAsync(DiscordPresencePacket packet)
         {
             var cacheKey = CacheKey.User(packet.User.Id);
             var cache = await CacheClient.GetAsync<DiscordUserPacket>(cacheKey);
@@ -329,7 +331,7 @@ namespace Senko.Discord
             }
         }
 
-        private async Task<DiscordGuildMemberPacket> UpdateGuildMemberCacheAsync(GuildMemberUpdateEventArgs member)
+        private async ValueTask<DiscordGuildMemberPacket> UpdateGuildMemberCacheAsync(GuildMemberUpdateEventArgs member)
         {
             var key = CacheKey.GuildMember(member.GuildId, member.User.Id);
             var cache = await CacheClient.GetAsync<DiscordGuildMemberPacket>(key);
@@ -351,7 +353,7 @@ namespace Senko.Discord
             return cacheMember;
         }
 
-        private Task InsertGuildMemberCacheAsync(DiscordGuildMemberPacket member)
+        private ValueTask InsertGuildMemberCacheAsync(DiscordGuildMemberPacket member)
         {
             return AddAsync(
                 CacheKey.GuildMemberIdList(member.GuildId),
@@ -360,7 +362,7 @@ namespace Senko.Discord
             );
         }
 
-        private Task DeleteGuildMemberCacheAsync(ulong guildId, DiscordUserPacket user)
+        private ValueTask DeleteGuildMemberCacheAsync(ulong guildId, DiscordUserPacket user)
         {
             return RemoveAsync(
                 CacheKey.GuildMemberIdList(guildId),
@@ -369,12 +371,12 @@ namespace Senko.Discord
             );
         }
 
-        private Task DeleteGuildCacheAsync(DiscordGuildUnavailablePacket unavailableGuild)
+        private ValueTask DeleteGuildCacheAsync(DiscordGuildUnavailablePacket unavailableGuild)
         {
-            return CacheClient.RemoveAsync(CacheKey.Guild(unavailableGuild.GuildId));
+            return new ValueTask(CacheClient.RemoveAsync(CacheKey.Guild(unavailableGuild.GuildId)));
         }
 
-        private async Task<DiscordGuildPacket> UpdateGuildCacheAsync(DiscordGuildPacket guild)
+        private async ValueTask<DiscordGuildPacket> UpdateGuildCacheAsync(DiscordGuildPacket guild)
         {
             var cache = await CacheClient.GetAsync<DiscordGuildPacket>(CacheKey.Guild(guild.Id));
             var cacheGuild = cache.HasValue ? cache.Value : new DiscordGuildPacket();
@@ -386,11 +388,11 @@ namespace Senko.Discord
             return cacheGuild;
         }
 
-        private Task InsertGuildCacheAsync(DiscordGuildPacket guild)
+        private ValueTask InsertGuildCacheAsync(DiscordGuildPacket guild)
         {
             guild.Members.RemoveAll(x => x == null);
 
-            return Task.WhenAll(
+            return new ValueTask(Task.WhenAll(
                 new Task[]
                     {
                         CacheClient.SetAsync(CacheKey.Guild(guild.Id), guild),
@@ -413,14 +415,14 @@ namespace Senko.Discord
                         id => CacheKey.GuildMember(guild.Id, id),
                         guild.Members)
                     )
-            );
+            ));
         }
 
-        private Task UpdateChannelCacheAsync(DiscordChannelPacket channel)
+        private ValueTask UpdateChannelCacheAsync(DiscordChannelPacket channel)
         {
             if (!channel.GuildId.HasValue)
             {
-                return CacheClient.SetAsync(CacheKey.Channel(channel.Id), channel);
+                return new ValueTask(CacheClient.SetAsync(CacheKey.Channel(channel.Id), channel));
             }
 
             return AddAsync(
@@ -430,11 +432,11 @@ namespace Senko.Discord
             );
         }
 
-        private Task DeleteChannelCacheAsync(DiscordChannelPacket channel)
+        private ValueTask DeleteChannelCacheAsync(DiscordChannelPacket channel)
         {
             if (!channel.GuildId.HasValue)
             {
-                return CacheClient.RemoveAsync(CacheKey.Channel());
+                return new ValueTask(CacheClient.RemoveAsync(CacheKey.Channel()));
             }
 
             return RemoveAsync(
@@ -454,7 +456,7 @@ namespace Senko.Discord
             };
         }
 
-        private async Task AddAsync<T>(string listName, string cacheName, T item)
+        private async ValueTask AddAsync<T>(string listName, string cacheName, T item)
             where T : ISnowflake
         {
             var cache = await CacheClient.GetAsync<List<ulong>>(listName);
@@ -469,7 +471,7 @@ namespace Senko.Discord
             await CacheClient.SetAsync(cacheName, item);
         }
 
-        private async Task RemoveAsync(string listName, string cacheName, ulong id)
+        private async ValueTask RemoveAsync(string listName, string cacheName, ulong id)
         {
             var cache = await CacheClient.GetAsync<List<ulong>>(listName);
 

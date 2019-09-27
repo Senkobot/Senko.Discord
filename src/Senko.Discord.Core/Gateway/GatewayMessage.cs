@@ -1,4 +1,5 @@
 ﻿using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Senko.Discord.Gateway
 {
@@ -16,8 +17,9 @@ namespace Senko.Discord.Gateway
     [DataContract]
     public struct GatewayMessage : IGatewayMessage
     {
+        [JsonPropertyName("op")]
         [DataMember(Name = "op", Order = 1)]
-        public GatewayOpcode OpCode;
+        public GatewayOpcode OpCode { get; set; }
 
         GatewayOpcode IGatewayMessage.OpCode => OpCode;
 
@@ -31,17 +33,21 @@ namespace Senko.Discord.Gateway
     [DataContract]
 	public struct GatewayMessage<T> : IGatewayMessage
     {
+        [JsonPropertyName("op")]
         [DataMember(Name = "op", Order = 1)]
-        public GatewayOpcode OpCode;
+        public GatewayOpcode OpCode { get; set; }
 
+        [JsonPropertyName("t")]
         [DataMember(Name = "t", Order = 2)]
-        public string EventName;
+        public string EventName { get; set; }
 
+        [JsonPropertyName("s")]
         [DataMember(Name = "s", Order = 3)]
-        public int? SequenceNumber;
+        public int? SequenceNumber { get; set; }
 
+        [JsonPropertyName("d")]
         [DataMember(Name = "d", Order = 4)]
-        public T Data;
+        public T Data { get; set; }
 
         GatewayOpcode IGatewayMessage.OpCode => OpCode;
 

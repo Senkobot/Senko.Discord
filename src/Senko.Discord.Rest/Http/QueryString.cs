@@ -6,7 +6,7 @@ namespace Senko.Discord.Rest.Http
     public class QueryString
     {
 		public string Query
-			=> "?" + string.Join("&", queryArgs.Select(x => $"{x.Key}={x.Value.ToString()}"));
+			=> "?" + string.Join("&", queryArgs.Select(x => $"{x.Key}={x.Value}"));
 
 		private Dictionary<string, object> queryArgs = new Dictionary<string, object>();
 

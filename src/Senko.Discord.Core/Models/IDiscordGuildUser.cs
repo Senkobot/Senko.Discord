@@ -20,16 +20,16 @@ namespace Senko.Discord
         /// </summary>
         DateTimeOffset? PremiumSince { get; }
 
-		Task AddRoleAsync(IDiscordRole role);
+		ValueTask AddRoleAsync(IDiscordRole role);
 
-		Task<IDiscordGuild> GetGuildAsync();
+		ValueTask<IDiscordGuild> GetGuildAsync();
 
-		Task<int> GetHierarchyAsync();
+		ValueTask<int> GetHierarchyAsync();
 
-		Task<bool> HasPermissionsAsync(GuildPermission permissions);
+		ValueTask<bool> HasPermissionsAsync(GuildPermission permissions);
 
-		Task KickAsync(string reason = "");
+		ValueTask KickAsync(string reason = "");
 
-		Task RemoveRoleAsync(IDiscordRole role);
+		ValueTask RemoveRoleAsync(IDiscordRole role);
 	}
 }

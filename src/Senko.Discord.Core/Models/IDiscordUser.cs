@@ -20,9 +20,9 @@ namespace Senko.Discord
 
 		bool IsBot { get; }
 
-		Task<IDiscordPresence> GetPresenceAsync();
+        ValueTask<IDiscordPresence> GetPresenceAsync();
 
-		Task<IDiscordTextChannel> GetDMChannelAsync();
+        ValueTask<IDiscordTextChannel> GetDMChannelAsync();
 
 		string GetAvatarUrl(ImageType type = ImageType.AUTO, ImageSize size = ImageSize.x256);
 	}

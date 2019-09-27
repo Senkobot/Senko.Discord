@@ -7,15 +7,15 @@ namespace Senko.Discord.Gateway.Ratelimiting
     {
         private DateTime _lastIdentifyAccepted = DateTime.MinValue;
 
-        public Task<bool> CanIdentifyAsync()
+        public ValueTask<bool> CanIdentifyAsync()
         {
             if (_lastIdentifyAccepted.AddSeconds(5) > DateTime.Now)
             {
-                return Task.FromResult(false);
+                return new ValueTask<bool>(false);
             }
 
             _lastIdentifyAccepted = DateTime.Now;
-            return Task.FromResult(true);
+            return new ValueTask<bool>(true);
         }
     }
 }

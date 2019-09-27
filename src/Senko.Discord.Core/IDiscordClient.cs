@@ -9,9 +9,9 @@ namespace Senko.Discord
 {
     public interface IDiscordClient : IDisposable
     {
-        Task StartAsync();
+        ValueTask StartAsync();
 
-        Task StopAsync();
+        ValueTask StopAsync();
 
         IDiscordApiClient ApiClient { get; }
 
@@ -19,42 +19,42 @@ namespace Senko.Discord
 
         ulong? CurrentUserId { get; set; }
 
-        Task<IDiscordTextChannel> CreateDMAsync(ulong userid);
+        ValueTask<IDiscordTextChannel> CreateDMAsync(ulong userid);
 
-        Task<IDiscordRole> CreateRoleAsync(ulong guildId, CreateRoleArgs args = null);
+        ValueTask<IDiscordRole> CreateRoleAsync(ulong guildId, CreateRoleArgs args = null);
 
-        Task<IDiscordRole> EditRoleAsync(ulong guildId, DiscordRolePacket role);
+        ValueTask<IDiscordRole> EditRoleAsync(ulong guildId, DiscordRolePacket role);
 
-        Task<IDiscordPresence> GetUserPresence(ulong userId, ulong? guildId = null);
+        ValueTask<IDiscordPresence> GetUserPresence(ulong userId, ulong? guildId = null);
 
-        Task<IDiscordRole> GetRoleAsync(ulong guildId, ulong roleId);
+        ValueTask<IDiscordRole> GetRoleAsync(ulong guildId, ulong roleId);
 
-        Task<IEnumerable<IDiscordRole>> GetRolesAsync(ulong guildId);
+        ValueTask<IEnumerable<IDiscordRole>> GetRolesAsync(ulong guildId);
 
-        Task<IEnumerable<IDiscordGuildChannel>> GetChannelsAsync(ulong guildId);
+        ValueTask<IEnumerable<IDiscordGuildChannel>> GetChannelsAsync(ulong guildId);
 
-        Task<IDiscordChannel> GetChannelAsync(ulong id, ulong? guildId = null);
+        ValueTask<IDiscordChannel> GetChannelAsync(ulong id, ulong? guildId = null);
 
-        Task<T> GetChannelAsync<T>(ulong id, ulong? guildId = null) where T : class, IDiscordChannel;
+        ValueTask<T> GetChannelAsync<T>(ulong id, ulong? guildId = null) where T : class, IDiscordChannel;
 
-        Task<IDiscordSelfUser> GetSelfAsync();
+        ValueTask<IDiscordSelfUser> GetSelfAsync();
 
-        Task<IDiscordGuild> GetGuildAsync(ulong id);
+        ValueTask<IDiscordGuild> GetGuildAsync(ulong id);
 
-        Task<IDiscordGuildUser> GetGuildUserAsync(ulong id, ulong guildId);
+        ValueTask<IDiscordGuildUser> GetGuildUserAsync(ulong id, ulong guildId);
 
-        Task<IEnumerable<IDiscordGuildUser>> GetGuildUsersAsync(ulong guildId);
+        ValueTask<IEnumerable<IDiscordGuildUser>> GetGuildUsersAsync(ulong guildId);
 
-        Task<IEnumerable<IDiscordUser>> GetReactionsAsync(ulong channelId, ulong messageId, DiscordEmoji emoji);
+        ValueTask<IEnumerable<IDiscordUser>> GetReactionsAsync(ulong channelId, ulong messageId, DiscordEmoji emoji);
 
-        Task<IDiscordUser> GetUserAsync(ulong id);
+        ValueTask<IDiscordUser> GetUserAsync(ulong id);
 
-        Task SetGameAsync(int shardId, DiscordStatus status);
+        ValueTask SetGameAsync(int shardId, DiscordStatus status);
 
-        Task<IDiscordMessage> SendFileAsync(ulong channelId, Stream stream, string fileName, MessageArgs message = null);
+        ValueTask<IDiscordMessage> SendFileAsync(ulong channelId, Stream stream, string fileName, MessageArgs message = null);
 
-        Task<IDiscordMessage> SendMessageAsync(ulong channelId, MessageArgs message);
+        ValueTask<IDiscordMessage> SendMessageAsync(ulong channelId, MessageArgs message);
 
-        Task<IDiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, EditMessageArgs message);
+        ValueTask<IDiscordMessage> EditMessageAsync(ulong channelId, ulong messageId, EditMessageArgs message);
     }
 }

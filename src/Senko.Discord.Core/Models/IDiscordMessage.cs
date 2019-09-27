@@ -35,25 +35,25 @@ namespace Senko.Discord
 
         DiscordMessageType Type { get; }
 
-        Task CreateReactionAsync(DiscordEmoji emoji);
+        ValueTask CreateReactionAsync(DiscordEmoji emoji);
 
-		Task DeleteReactionAsync(DiscordEmoji emoji);
+		ValueTask DeleteReactionAsync(DiscordEmoji emoji);
 
-		Task DeleteReactionAsync(DiscordEmoji emoji, IDiscordUser user);
+		ValueTask DeleteReactionAsync(DiscordEmoji emoji, IDiscordUser user);
 
-		Task DeleteReactionAsync(DiscordEmoji emoji, ulong userId);
+		ValueTask DeleteReactionAsync(DiscordEmoji emoji, ulong userId);
 
-		Task DeleteAllReactionsAsync();
+		ValueTask DeleteAllReactionsAsync();
 
-		Task<IDiscordMessage> EditAsync(EditMessageArgs args);
+		ValueTask<IDiscordMessage> EditAsync(EditMessageArgs args);
 
         /// <summary>
         /// Deletes this message.
         /// </summary>
-		Task DeleteAsync();
+		ValueTask DeleteAsync();
 
-		Task<IDiscordTextChannel> GetChannelAsync();
+		ValueTask<IDiscordTextChannel> GetChannelAsync();
 
-		Task<IEnumerable<IDiscordUser>> GetReactionsAsync(DiscordEmoji emoji);
+		ValueTask<IEnumerable<IDiscordUser>> GetReactionsAsync(DiscordEmoji emoji);
 	}
 }

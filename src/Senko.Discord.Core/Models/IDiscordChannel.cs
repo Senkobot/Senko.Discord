@@ -11,7 +11,7 @@ namespace Senko.Discord
 
 		string Name { get; }
 
-		Task DeleteAsync();
+		ValueTask DeleteAsync();
 	}
 
 	public interface IDiscordGuildChannel : IDiscordChannel
@@ -20,10 +20,10 @@ namespace Senko.Discord
 
 		ChannelType Type { get; }
 
-		Task<GuildPermission> GetPermissionsAsync(IDiscordGuildUser user);
+        ValueTask<GuildPermission> GetPermissionsAsync(IDiscordGuildUser user);
 
-		Task<IDiscordGuildUser> GetUserAsync(ulong id);
+        ValueTask<IDiscordGuildUser> GetUserAsync(ulong id);
 
-		Task<IDiscordGuild> GetGuildAsync();
+		ValueTask<IDiscordGuild> GetGuildAsync();
 	}
 }

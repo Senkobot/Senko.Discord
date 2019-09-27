@@ -4,8 +4,8 @@ namespace Senko.Discord.Gateway
 {
 	public interface IGatewayApiClient
 	{
-		Task<GatewayConnectionPacket> GetGatewayAsync();
+        ValueTask<GatewayConnectionPacket> GetGatewayAsync();
 
-		Task<GatewayConnectionPacket> GetGatewayBotAsync();
+		ValueTask<GatewayConnectionPacket> GetGatewayBotAsync();
 	}
 }

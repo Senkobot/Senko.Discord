@@ -6,9 +6,9 @@ namespace Senko.Discord.Helpers
 {
     internal static class DiscordChannelHelper
     {
-        public static async Task<DiscordMessage> CreateMessageAsync(
-            IDiscordClient client, 
-            DiscordChannelPacket channel, 
+        public static async ValueTask<DiscordMessage> CreateMessageAsync(
+            IDiscordClient client,
+            DiscordChannelPacket channel,
             MessageArgs args)
         {
             var message = await client.ApiClient.SendMessageAsync(channel.Id, args);

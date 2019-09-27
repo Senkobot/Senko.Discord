@@ -7,12 +7,12 @@ namespace Senko.Discord
 {
 	public interface IDiscordGateway
 	{
-        Task RestartAsync();
+        ValueTask RestartAsync();
 
-        Task SendAsync(int shardId, GatewayOpcode opCode, object payload);
+        ValueTask SendAsync(int shardId, GatewayOpcode opCode, object payload);
 
-		Task StartAsync();
+		ValueTask StartAsync();
 
-		Task StopAsync();
+		ValueTask StopAsync();
 	}
 }

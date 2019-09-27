@@ -39,13 +39,13 @@ namespace Senko.Discord.Internal
         public string Mention
             => $"<@{Id}>";
 
-        public async Task<IDiscordPresence> GetPresenceAsync()
+        public async ValueTask<IDiscordPresence> GetPresenceAsync()
             => await Client.GetUserPresence(Id);
 
         public DateTimeOffset CreatedAt
             => this.GetCreationTime();
 
-        public async Task<IDiscordTextChannel> GetDMChannelAsync()
+        public async ValueTask<IDiscordTextChannel> GetDMChannelAsync()
         {
             var currentUser = await Client.GetSelfAsync();
             if(Id == currentUser.Id)

@@ -8,42 +8,42 @@ namespace Senko.Discord.Gateway
 {
     public interface IDiscordPacketHandler
     {
-        Task OnChannelCreate(DiscordChannelPacket packet);
-        Task OnChannelUpdate(DiscordChannelPacket packet);
-        Task OnChannelDelete(DiscordChannelPacket packet);
+        ValueTask OnChannelCreate(DiscordChannelPacket packet);
+        ValueTask OnChannelUpdate(DiscordChannelPacket packet);
+        ValueTask OnChannelDelete(DiscordChannelPacket packet);
 
-        Task OnGuildCreate(DiscordGuildPacket packet);
-        Task OnGuildUpdate(DiscordGuildPacket packet);
-        Task OnGuildDelete(DiscordGuildUnavailablePacket packet);
+        ValueTask OnGuildCreate(DiscordGuildPacket packet);
+        ValueTask OnGuildUpdate(DiscordGuildPacket packet);
+        ValueTask OnGuildDelete(DiscordGuildUnavailablePacket packet);
 
-        Task OnGuildMemberAdd(DiscordGuildMemberPacket packet);
-        Task OnGuildMemberRemove(GuildIdUserArgs packet);
-        Task OnGuildMemberUpdate(GuildMemberUpdateEventArgs packet);
+        ValueTask OnGuildMemberAdd(DiscordGuildMemberPacket packet);
+        ValueTask OnGuildMemberRemove(GuildIdUserArgs packet);
+        ValueTask OnGuildMemberUpdate(GuildMemberUpdateEventArgs packet);
 
-        Task OnGuildBanAdd(GuildIdUserArgs packet);
-        Task OnGuildBanRemove(GuildIdUserArgs packet);
+        ValueTask OnGuildBanAdd(GuildIdUserArgs packet);
+        ValueTask OnGuildBanRemove(GuildIdUserArgs packet);
 
-        Task OnGuildEmojiUpdate(GuildEmojisUpdateEventArgs packet);
+        ValueTask OnGuildEmojiUpdate(GuildEmojisUpdateEventArgs packet);
 
-        Task OnGuildRoleCreate(RoleEventArgs packet);
-        Task OnGuildRoleUpdate(RoleEventArgs packet);
-        Task OnGuildRoleDelete(RoleDeleteEventArgs packet);
+        ValueTask OnGuildRoleCreate(RoleEventArgs packet);
+        ValueTask OnGuildRoleUpdate(RoleEventArgs packet);
+        ValueTask OnGuildRoleDelete(RoleDeleteEventArgs packet);
 
-        Task OnMessageCreate(DiscordMessagePacket packet);
-        Task OnMessageUpdate(DiscordMessagePacket packet);
-        Task OnMessageDelete(MessageDeleteArgs packet);
-        Task OnMessageDeleteBulk(MessageBulkDeleteEventArgs packet);
+        ValueTask OnMessageCreate(DiscordMessagePacket packet);
+        ValueTask OnMessageUpdate(DiscordMessagePacket packet);
+        ValueTask OnMessageDelete(MessageDeleteArgs packet);
+        ValueTask OnMessageDeleteBulk(MessageBulkDeleteEventArgs packet);
 
-        Task OnMessageReactionAdd(MessageReactionArgs packet);
-        Task OnMessageReactionRemove(MessageReactionArgs packet);
+        ValueTask OnMessageReactionAdd(MessageReactionArgs packet);
+        ValueTask OnMessageReactionRemove(MessageReactionArgs packet);
 
-        Task OnPresenceUpdate(DiscordPresencePacket packet);
+        ValueTask OnPresenceUpdate(DiscordPresencePacket packet);
 
-        Task OnReady(GatewayReadyPacket packet);
-        Task OnResume(GatewayReadyPacket packet);
+        ValueTask OnReady(GatewayReadyPacket packet);
+        ValueTask OnResume(GatewayReadyPacket packet);
 
-        Task OnTypingStart(TypingStartEventArgs packet);
+        ValueTask OnTypingStart(TypingStartEventArgs packet);
 
-        Task OnUserUpdate(DiscordUserPacket packet);
+        ValueTask OnUserUpdate(DiscordUserPacket packet);
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
+using System.Text.Json.Serialization;
 
 namespace Senko.Discord.Packets
 {
@@ -9,6 +10,7 @@ namespace Senko.Discord.Packets
 		[DataMember(Name ="title", Order = 1)]
 		public string Title { get; set; }
 
+        [JsonPropertyName("description")]
         [DataMember(Name = "description", Order = 2)]
 		public string Description { get; set; }
 
