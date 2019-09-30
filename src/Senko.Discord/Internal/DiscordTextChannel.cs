@@ -15,24 +15,9 @@ namespace Senko.Discord
 			: base(packet, client)
 		{
 		}
-		public async ValueTask DeleteMessagesAsync(params ulong[] id)
+		public ValueTask DeleteMessagesAsync(params ulong[] messageIds)
 		{
-			if (id.Length == 0)
-			{
-				throw new ArgumentNullException();
-			}
-
-			if (id.Length < 2)
-			{
-				await _client.ApiClient.DeleteMessageAsync(Id, id[0]);
-			}
-
-			if (id.Length > 100)
-			{
-				id = id.Take(100).ToArray();
-			}
-
-			await _client.ApiClient.DeleteMessagesAsync(Id, id);
+			return _client.DeleteMessagesAsync(Id, messageIds);
 		}
 
 		public async ValueTask DeleteMessagesAsync(params IDiscordMessage[] messages)
@@ -40,33 +25,33 @@ namespace Senko.Discord
 			await DeleteMessagesAsync(messages.Select(x => x.Id).ToArray());
 		}
 
-		public async ValueTask<IDiscordMessage> GetMessageAsync(ulong id)
+		public ValueTask<IDiscordMessage> GetMessageAsync(ulong id)
 		{
-			return new DiscordMessage(await _client.ApiClient.GetMessageAsync(Id, id), _client);
+			return _client.GetMessageAsync(Id, id);
 		}
 
-		public async ValueTask<IEnumerable<IDiscordMessage>> GetMessagesAsync(int amount = 100)
-		{
-			return (await _client.ApiClient.GetMessagesAsync(Id, amount))
-				.Select(x => new DiscordMessage(x, _client));
-		}
+		public IAsyncEnumerable<IDiscordMessage> GetMessagesAsync(int amount = 100)
+        {
+            return _client.GetMessagesAsync(Id, amount);
+        }
 
-		public async ValueTask<IDiscordMessage> SendFileAsync(Stream file, string fileName, string content, bool isTTS = false, DiscordEmbed embed = null)
-			=> await _client.SendFileAsync(
-                Id, 
-                file, 
-                fileName, 
+		public ValueTask<IDiscordMessage> SendFileAsync(Stream file, string fileName, string content, bool isTTS = false, DiscordEmbed embed = null)
+        {
+            return _client.SendFileAsync(
+                Id,
+                file,
+                fileName,
                 new MessageArgs(content, embed, isTTS));
+        }
 
-        public async ValueTask<IDiscordMessage> SendMessageAsync(string content, bool isTTS = false, DiscordEmbed embed = null)
-            => await DiscordChannelHelper.CreateMessageAsync(
-                _client, 
-                _packet, 
-                new MessageArgs(content, embed, isTTS));
+        public ValueTask<IDiscordMessage> SendMessageAsync(string content, bool isTTS = false, DiscordEmbed embed = null)
+        {
+            return _client.SendMessageAsync(Id, new MessageArgs(content, embed, isTTS));
+        }
 
-		public async ValueTask TriggerTypingAsync()
+        public ValueTask TriggerTypingAsync()
 		{
-			await _client.ApiClient.TriggerTypingAsync(Id);
+			return _client.TriggerTypingAsync(Id);
 		}
 	}
 }

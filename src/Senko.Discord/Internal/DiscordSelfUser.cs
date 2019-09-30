@@ -19,7 +19,7 @@ namespace Senko.Discord.Internal
         {
             var args = new UserModifyArgs();
             modifyArgs(args);
-            await Client.ApiClient.ModifySelfAsync(args);
+            await Client.ModifySelfAsync(args);
         }
     }
 }

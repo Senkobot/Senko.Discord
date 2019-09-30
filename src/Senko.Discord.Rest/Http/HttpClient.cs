@@ -42,13 +42,17 @@ namespace Senko.Discord.Rest.Http
 			_client.Dispose();
 		}
 
-		public async ValueTask<HttpResponse> DeleteAsync(string url)
-			=> await SendAsync(HttpMethod.Delete, url);
+		public ValueTask<HttpResponse> DeleteAsync(string url)
+        {
+            return SendAsync(HttpMethod.Delete, url);
+        }
 
-		public async ValueTask<HttpResponse> GetAsync(string url)
-			=> await SendAsync(HttpMethod.Get, url);
+        public ValueTask<HttpResponse> GetAsync(string url)
+        {
+            return SendAsync(HttpMethod.Get, url);
+        }
 
-		public async ValueTask<Stream> GetStreamAsync(string url)
+        public async ValueTask<Stream> GetStreamAsync(string url)
 		{
 			var response = await GetAsync(url);
 

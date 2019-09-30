@@ -58,6 +58,96 @@ namespace Senko.Discord
             );
         }
 
+        public ValueTask DeleteChannelAsync(ulong channelId)
+        {
+            return ApiClient.DeleteChannelAsync(channelId);
+        }
+
+        public ValueTask AddGuildBanAsync(ulong guildId, ulong userId, int pruneDays, string reason)
+        {
+            return ApiClient.AddGuildBanAsync(guildId, userId, pruneDays, reason);
+        }
+
+        public ValueTask RemoveGuildBanAsync(ulong guildId, ulong userId)
+        {
+            return ApiClient.RemoveGuildBanAsync(guildId, userId);
+        }
+
+        public ValueTask<int> GetPruneCountAsync(in ulong guildId, in int days)
+        {
+            return ApiClient.GetPruneCountAsync(guildId, days);
+        }
+
+        public ValueTask<int?> PruneGuildMembersAsync(ulong guildId, int days, bool computeCount)
+        {
+            return ApiClient.PruneGuildMembersAsync(guildId, days, computeCount);
+        }
+
+        public ValueTask DeleteMessagesAsync(ulong id, params ulong[] messageIds)
+        {
+            return ApiClient.DeleteMessagesAsync(id, messageIds);
+        }
+
+        public async ValueTask<IDiscordMessage> GetMessageAsync(ulong channelId, ulong messageId)
+        {
+            return new DiscordMessage(await ApiClient.GetMessageAsync(channelId, messageId), this);
+        }
+
+        public IAsyncEnumerable<IDiscordMessage> GetMessagesAsync(ulong channelId, int amount)
+        {
+            return ApiClient.GetMessagesAsync(channelId, amount).Select(p => new DiscordMessage(p, this));
+        }
+
+        public ValueTask TriggerTypingAsync(ulong channelId)
+        {
+            return ApiClient.TriggerTypingAsync(channelId);
+        }
+
+        public ValueTask AddGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId)
+        {
+            return ApiClient.AddGuildMemberRoleAsync(guildId, userId, roleId);
+        }
+
+        public ValueTask KickGuildMemberAsync(ulong guildId, ulong userId, string reason)
+        {
+            return ApiClient.KickGuildMemberAsync(guildId, userId, reason);
+        }
+
+        public ValueTask RemoveGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId)
+        {
+            return ApiClient.RemoveGuildMemberRoleAsync(guildId, userId, roleId);
+        }
+
+        public ValueTask DeleteMessageAsync(ulong channelId, ulong packetId)
+        {
+            return ApiClient.DeleteMessageAsync(channelId, packetId);
+        }
+
+        public ValueTask DeleteReactionsAsync(ulong channelId, ulong messageId)
+        {
+            return ApiClient.DeleteReactionsAsync(channelId, messageId);
+        }
+
+        public ValueTask CreateReactionAsync(ulong channelId, ulong messageId, DiscordEmoji emoji)
+        {
+            return ApiClient.CreateReactionAsync(channelId, messageId, emoji);
+        }
+
+        public ValueTask DeleteReactionAsync(ulong channelId, ulong messageId, DiscordEmoji emoji)
+        {
+            return ApiClient.DeleteReactionAsync(channelId, messageId, emoji);
+        }
+
+        public ValueTask DeleteReactionAsync(ulong channelId, ulong messageId, DiscordEmoji emoji, ulong userId)
+        {
+            return ApiClient.DeleteReactionAsync(channelId, messageId, emoji, userId);
+        }
+
+        public ValueTask ModifySelfAsync(UserModifyArgs args)
+        {
+            return ApiClient.ModifySelfAsync(args);
+        }
+
         public virtual async ValueTask<IDiscordTextChannel> CreateDMAsync(
             ulong userid)
         {

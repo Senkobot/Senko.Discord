@@ -39,19 +39,23 @@ namespace Senko.Discord.Internal
         public string Mention
             => $"<@{Id}>";
 
-        public async ValueTask<IDiscordPresence> GetPresenceAsync()
-            => await Client.GetUserPresence(Id);
-
         public DateTimeOffset CreatedAt
             => this.GetCreationTime();
+
+        public ValueTask<IDiscordPresence> GetPresenceAsync()
+        {
+            return Client.GetUserPresence(Id);
+        }
 
         public async ValueTask<IDiscordTextChannel> GetDMChannelAsync()
         {
             var currentUser = await Client.GetSelfAsync();
-            if(Id == currentUser.Id)
+
+            if (Id == currentUser.Id)
             {
                 throw new InvalidOperationException("Can't create a DM channel with self.");
             }
+
             return await Client.CreateDMAsync(Id);
         }
     }

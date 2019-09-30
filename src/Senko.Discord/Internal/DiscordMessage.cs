@@ -60,11 +60,15 @@ namespace Senko.Discord.Internal
 		public DiscordMessageType Type
 			=> _packet.Type;
 
-		public async ValueTask<IDiscordMessage> EditAsync(EditMessageArgs args)
-			=> await _client.EditMessageAsync(ChannelId, Id, args.Content, args.Embed);
+		public ValueTask<IDiscordMessage> EditAsync(EditMessageArgs args)
+        {
+            return _client.EditMessageAsync(ChannelId, Id, args.Content, args.Embed);
+        }
 
-		public async ValueTask DeleteAsync()
-			=> await _client.ApiClient.DeleteMessageAsync(_packet.ChannelId, _packet.Id);
+        public ValueTask DeleteAsync()
+        {
+            return _client.DeleteMessageAsync(_packet.ChannelId, _packet.Id);
+        }
 
         public async ValueTask<IDiscordTextChannel> GetChannelAsync()
         {
@@ -72,22 +76,34 @@ namespace Senko.Discord.Internal
             return channel as IDiscordTextChannel;
         }
 
-		public async ValueTask<IEnumerable<IDiscordUser>> GetReactionsAsync(DiscordEmoji emoji)
-			=> await _client.GetReactionsAsync(_packet.ChannelId, Id, emoji);
+		public ValueTask<IEnumerable<IDiscordUser>> GetReactionsAsync(DiscordEmoji emoji)
+        {
+            return _client.GetReactionsAsync(_packet.ChannelId, Id, emoji);
+        }
 
-		public async ValueTask CreateReactionAsync(DiscordEmoji emoji)
-			=> await _client.ApiClient.CreateReactionAsync(ChannelId, Id, emoji);
+        public ValueTask CreateReactionAsync(DiscordEmoji emoji)
+        {
+            return _client.CreateReactionAsync(ChannelId, Id, emoji);
+        }
 
-		public async ValueTask DeleteReactionAsync(DiscordEmoji emoji)
-			=> await _client.ApiClient.DeleteReactionAsync(ChannelId, Id, emoji);
+        public ValueTask DeleteReactionAsync(DiscordEmoji emoji)
+        {
+            return _client.DeleteReactionAsync(ChannelId, Id, emoji);
+        }
 
-		public async ValueTask DeleteReactionAsync(DiscordEmoji emoji, IDiscordUser user)
-			=> await DeleteReactionAsync(emoji, user.Id);
+        public ValueTask DeleteReactionAsync(DiscordEmoji emoji, IDiscordUser user)
+        {
+            return DeleteReactionAsync(emoji, user.Id);
+        }
 
-		public async ValueTask DeleteReactionAsync(DiscordEmoji emoji, ulong userId)
-			=> await _client.ApiClient.DeleteReactionAsync(ChannelId, Id, emoji, userId);
+        public ValueTask DeleteReactionAsync(DiscordEmoji emoji, ulong userId)
+        {
+            return _client.DeleteReactionAsync(ChannelId, Id, emoji, userId);
+        }
 
-		public async ValueTask DeleteAllReactionsAsync()
-			=> await _client.ApiClient.DeleteReactionsAsync(ChannelId, Id);
-	}
+        public ValueTask DeleteAllReactionsAsync()
+        {
+            return _client.DeleteReactionsAsync(ChannelId, Id);
+        }
+    }
 }
