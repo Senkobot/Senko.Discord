@@ -7,11 +7,11 @@ namespace Senko.Discord
 {
 	public interface IDiscordTextChannel : IDiscordChannel
 	{
-		ValueTask DeleteMessagesAsync(params ulong[] id);
+		ValueTask DeleteMessagesAsync(params ulong[] messageIds);
 
 		ValueTask DeleteMessagesAsync(params IDiscordMessage[] id);
 
-		ValueTask<IEnumerable<IDiscordMessage>> GetMessagesAsync(int amount = 100);
+		IAsyncEnumerable<IDiscordMessage> GetMessagesAsync(int amount = 100);
 
 		ValueTask<IDiscordMessage> GetMessageAsync(ulong id);
 

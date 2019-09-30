@@ -36,25 +36,27 @@ namespace Senko.Discord.Internal
 			=> (GuildPermission)_packet.Permissions.GetValueOrDefault(0);
 
         public int PremiumSubscriberCount 
-            => _packet.PremiumSubscriberCount
-                .GetValueOrDefault(0);
+            => _packet.PremiumSubscriberCount.GetValueOrDefault(0);
 
         public int PremiumTier 
-            => _packet.PremiumTier
-                .GetValueOrDefault(0);
+            => _packet.PremiumTier.GetValueOrDefault(0);
 
         public async ValueTask AddBanAsync(IDiscordGuildUser user, int pruneDays = 7, string reason = null)
 		{
-			await _client.ApiClient.AddGuildBanAsync(Id, user.Id, pruneDays, reason);
+			await _client.AddGuildBanAsync(Id, user.Id, pruneDays, reason);
 		}
 
-		public async ValueTask<IDiscordRole> CreateRoleAsync(CreateRoleArgs roleParams = null)
-			=> await _client.CreateRoleAsync(Id, roleParams);
+		public ValueTask<IDiscordRole> CreateRoleAsync(CreateRoleArgs roleParams = null)
+        {
+            return _client.CreateRoleAsync(Id, roleParams);
+        }
 
-		public ValueTask<IDiscordGuildChannel> GetChannelAsync(ulong id)
-		    => _client.GetChannelAsync<IDiscordGuildChannel>(id, Id);
+        public ValueTask<IDiscordGuildChannel> GetChannelAsync(ulong id)
+        {
+            return _client.GetChannelAsync<IDiscordGuildChannel>(id, Id);
+        }
 
-		public async ValueTask<IEnumerable<IDiscordGuildChannel>> GetChannelsAsync()
+        public async ValueTask<IEnumerable<IDiscordGuildChannel>> GetChannelsAsync()
 		{
 			return await _client.GetChannelsAsync(Id);
 		}
@@ -80,9 +82,11 @@ namespace Senko.Discord.Internal
 		}
 
 		public ValueTask<IDiscordGuildUser> GetOwnerAsync()
-			=> GetMemberAsync(OwnerId);
+        {
+            return GetMemberAsync(OwnerId);
+        }
 
-		public async ValueTask<GuildPermission> GetPermissionsAsync(IDiscordGuildUser user)
+        public async ValueTask<GuildPermission> GetPermissionsAsync(IDiscordGuildUser user)
 		{
 			if (user.Id == OwnerId)
 			{
@@ -117,23 +121,24 @@ namespace Senko.Discord.Internal
 
         public ValueTask<int> GetPruneCountAsync(int days)
         {
-            return _client.ApiClient.GetPruneCountAsync(Id, days);
+            return _client.GetPruneCountAsync(Id, days);
         }
 
-        public async ValueTask<IDiscordRole> GetRoleAsync(ulong id)
-            => await _client.GetRoleAsync(Id, id)
-                .ConfigureAwait(false);
+        public ValueTask<IDiscordRole> GetRoleAsync(ulong id)
+        {
+            return _client.GetRoleAsync(Id, id);
+        }
 
-		public async ValueTask<IEnumerable<IDiscordRole>> GetRolesAsync()
-			=> await _client.GetRolesAsync(Id)
-                .ConfigureAwait(false);
+        public ValueTask<IEnumerable<IDiscordRole>> GetRolesAsync()
+        {
+            return _client.GetRolesAsync(Id);
+        }
 
         public async ValueTask<IDiscordGuildUser> GetSelfAsync()
 		{
-            IDiscordUser user = await _client.GetSelfAsync()
-                .ConfigureAwait(false);
+            IDiscordUser user = await _client.GetSelfAsync();
 
-            if(user == null)
+            if (user == null)
             {
                 throw new InvalidOperationException("Could not find self user");
             }
@@ -148,7 +153,8 @@ namespace Senko.Discord.Internal
             {
                 computeCount = false;
             }
-            return await _client.ApiClient.PruneGuildMembersAsync(Id, days, computeCount);
+
+            return await _client.PruneGuildMembersAsync(Id, days, computeCount);
         }
 
         public async ValueTask RemoveBanAsync(IDiscordGuildUser user)
@@ -158,7 +164,7 @@ namespace Senko.Discord.Internal
                 throw new ArgumentNullException(nameof(user));
             }
 
-            await _client.ApiClient.RemoveGuildBanAsync(Id, user.Id);
+            await _client.RemoveGuildBanAsync(Id, user.Id);
         }
     }
 }

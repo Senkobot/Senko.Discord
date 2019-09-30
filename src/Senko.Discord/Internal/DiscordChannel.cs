@@ -33,9 +33,9 @@ namespace Senko.Discord.Internal
                 .GetValueOrDefault(false) 
                     ?? false;
 
-		public async ValueTask DeleteAsync()
+		public ValueTask DeleteAsync()
 		{
-			await _client.ApiClient.DeleteChannelAsync(Id);
+			return _client.DeleteChannelAsync(Id);
 		}
 	}
 }

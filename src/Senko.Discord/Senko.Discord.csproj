@@ -30,6 +30,7 @@
 
   <ItemGroup>
     <PackageReference Include="Foundatio" Version="8.1.2058" />
+    <PackageReference Include="System.Linq.Async" Version="4.0.0" />
   </ItemGroup>
 
 </Project>

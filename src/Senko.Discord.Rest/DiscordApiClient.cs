@@ -394,18 +394,31 @@ namespace Senko.Discord.Rest
             return JsonHelper.Deserialize<DiscordMessagePacket>(response.Body);
         }
 
-        public async ValueTask<DiscordMessagePacket[]> GetMessagesAsync(ulong channelId,
+        public async IAsyncEnumerable<DiscordMessagePacket> GetMessagesAsync(
+            ulong channelId,
             int amount = 100)
         {
-            QueryString qs = new QueryString();
+            for (var i = amount - 1; i >= 0; i -= 100)
+            {
+                var qs = new QueryString();
 
-            qs.Add("limit", amount);
+                qs.Add("limit", amount);
 
-            var response = await RestClient.GetAsync(
-                DiscordApiRoutes.ChannelMessages(channelId) + qs.Query)
-                .ConfigureAwait(false);
-            HandleErrors(response);
-            return JsonHelper.Deserialize<DiscordMessagePacket[]>(response.Body);
+                var response = await RestClient.GetAsync(DiscordApiRoutes.ChannelMessages(channelId) + qs.Query);
+                HandleErrors(response);
+
+                var messages = JsonHelper.Deserialize<DiscordMessagePacket[]>(response.Body);
+
+                foreach (var message in messages)
+                {
+                    yield return message;
+                }
+
+                if (messages.Length < 100)
+                {
+                    break;
+                }
+            }
         }
 
         public async ValueTask<int> GetPruneCountAsync(
@@ -532,7 +545,7 @@ namespace Senko.Discord.Rest
             HandleErrors(response);
         }
 
-        public async ValueTask RemoveGuildMemberAsync(
+        public async ValueTask KickGuildMemberAsync(
             ulong guildId, 
             ulong userId, 
             string reason = null)

@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Threading.Tasks;
 using Senko.Discord.Gateway;
 using Senko.Discord.Packets;
@@ -53,7 +54,7 @@ namespace Senko.Discord.Rest
 
 		ValueTask<DiscordMessagePacket> GetMessageAsync(ulong channelId, ulong messageId);
 
-		ValueTask<DiscordMessagePacket[]> GetMessagesAsync(ulong channelId, int amount = 100);
+        IAsyncEnumerable<DiscordMessagePacket> GetMessagesAsync(ulong channelId, int amount = 100);
 
         ValueTask<int> GetPruneCountAsync(ulong guildId, int days);
 
@@ -73,7 +74,7 @@ namespace Senko.Discord.Rest
 
 		ValueTask RemoveGuildBanAsync(ulong guildId, ulong userId);
 
-		ValueTask RemoveGuildMemberAsync(ulong guildId, ulong userId, string reason = null);
+		ValueTask KickGuildMemberAsync(ulong guildId, ulong userId, string reason = null);
 
 		ValueTask RemoveGuildMemberRoleAsync(ulong guildId, ulong userId, ulong roleId);
 

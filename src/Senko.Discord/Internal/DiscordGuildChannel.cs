@@ -18,9 +18,11 @@ namespace Senko.Discord.Internal
 			=> _packet.Type;
 
 		public ValueTask<IDiscordGuild> GetGuildAsync()
-			=> _client.GetGuildAsync(GuildId);
+        {
+            return _client.GetGuildAsync(GuildId);
+        }
 
-		public async ValueTask<GuildPermission> GetPermissionsAsync(IDiscordGuildUser user)
+        public async ValueTask<GuildPermission> GetPermissionsAsync(IDiscordGuildUser user)
 		{
 			IDiscordGuild guild = await GetGuildAsync();
 
@@ -73,7 +75,9 @@ namespace Senko.Discord.Internal
 			return permissions;
 		}
 
-		public async ValueTask<IDiscordGuildUser> GetUserAsync(ulong id)
-			=> await _client.GetGuildUserAsync(id, GuildId);
-	}
+		public ValueTask<IDiscordGuildUser> GetUserAsync(ulong id)
+        {
+            return _client.GetGuildUserAsync(id, GuildId);
+        }
+    }
 }

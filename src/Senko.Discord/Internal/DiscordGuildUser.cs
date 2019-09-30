@@ -31,17 +31,19 @@ namespace Senko.Discord.Internal
         public DateTimeOffset? PremiumSince
             => _packet.PremiumSince;
 
-        public async ValueTask AddRoleAsync(IDiscordRole role)
+        public ValueTask AddRoleAsync(IDiscordRole role)
 		{
-			await Client.ApiClient.AddGuildMemberRoleAsync(GuildId, Id, role.Id);
+			return Client.AddGuildMemberRoleAsync(GuildId, Id, role.Id);
 		}
 
-		public async ValueTask<IDiscordGuild> GetGuildAsync()
-			=> await Client.GetGuildAsync(_packet.GuildId);
+		public ValueTask<IDiscordGuild> GetGuildAsync()
+        {
+            return Client.GetGuildAsync(_packet.GuildId);
+        }
 
-		public async ValueTask KickAsync(string reason = null)
+        public async ValueTask KickAsync(string reason = null)
 		{
-			await Client.ApiClient.RemoveGuildMemberAsync(GuildId, Id, reason);
+			await Client.KickGuildMemberAsync(GuildId, Id, reason);
 		}
 
 		public async ValueTask RemoveRoleAsync(IDiscordRole role)
@@ -51,7 +53,7 @@ namespace Senko.Discord.Internal
                 throw new ArgumentNullException(nameof(role));
             }
 
-			await Client.ApiClient.RemoveGuildMemberRoleAsync(GuildId, Id, role.Id);
+			await Client.RemoveGuildMemberRoleAsync(GuildId, Id, role.Id);
 		}
 
 		public async ValueTask<bool> HasPermissionsAsync(GuildPermission permissions)
