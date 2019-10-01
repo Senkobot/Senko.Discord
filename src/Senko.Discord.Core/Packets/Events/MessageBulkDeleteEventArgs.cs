@@ -7,13 +7,16 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class MessageBulkDeleteEventArgs
 	{
-		[DataMember(Name ="guild_id", Order = 1)]
+		[JsonPropertyName("guild_id")]
+		[DataMember(Name = "guild_id", Order = 1)]
 		public ulong GuildId { get; set; }
 
-		[DataMember(Name ="channel_id")]
+		[JsonPropertyName("channel_id")]
+		[DataMember(Name = "channel_id")]
 		public ulong ChannelId { get; set; }
 
-		[DataMember(Name ="ids")]
+		[JsonPropertyName("ids")]
+		[DataMember(Name = "ids")]
 		public ulong[] MessagesDeleted { get; set; }
 	}
 }

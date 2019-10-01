@@ -6,10 +6,12 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class EmojiModifyArgs
 	{
-		[DataMember(Name ="name")]
+		[JsonPropertyName("name")]
+		[DataMember(Name = "name")]
 		public string Name { get; private set; }
 
-		[DataMember(Name ="roles")]
+		[JsonPropertyName("roles")]
+		[DataMember(Name = "roles")]
 		public ulong[] Roles { get; private set; }
 
         public EmojiModifyArgs()

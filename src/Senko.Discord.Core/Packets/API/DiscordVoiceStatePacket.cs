@@ -6,31 +6,40 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class DiscordVoiceStatePacket
 	{
-		[DataMember(Name ="guild_id", Order = 1)]
+		[JsonPropertyName("guild_id")]
+		[DataMember(Name = "guild_id", Order = 1)]
 		public ulong? GuildId { get; set; }
 
-		[DataMember(Name ="channel_id", Order = 2)]
+		[JsonPropertyName("channel_id")]
+		[DataMember(Name = "channel_id", Order = 2)]
 		public ulong ChannelId { get; set; }
 
-		[DataMember(Name ="user_id", Order = 3)]
+		[JsonPropertyName("user_id")]
+		[DataMember(Name = "user_id", Order = 3)]
 		public ulong UserId { get; set; }
 
-		[DataMember(Name ="session_id", Order = 4)]
+		[JsonPropertyName("session_id")]
+		[DataMember(Name = "session_id", Order = 4)]
 		public string SessionId { get; set; }
 
-		[DataMember(Name ="deaf", Order = 5)]
+		[JsonPropertyName("deaf")]
+		[DataMember(Name = "deaf", Order = 5)]
 		public bool Deafened { get; set; }
 
-		[DataMember(Name ="mute", Order = 6)]
+		[JsonPropertyName("mute")]
+		[DataMember(Name = "mute", Order = 6)]
 		public bool Muted { get; set; }
 
-		[DataMember(Name ="self_deaf", Order = 7)]
+		[JsonPropertyName("self_deaf")]
+		[DataMember(Name = "self_deaf", Order = 7)]
 		public bool SelfDeafened { get; set; }
 
-		[DataMember(Name ="self_mute", Order = 8)]
+		[JsonPropertyName("self_mute")]
+		[DataMember(Name = "self_mute", Order = 8)]
 		public bool SelfMuted { get; set; }
 
-		[DataMember(Name ="suppress", Order = 9)]
+		[JsonPropertyName("suppress")]
+		[DataMember(Name = "suppress", Order = 9)]
 		public bool Suppressed { get; set; }
 	}
 }

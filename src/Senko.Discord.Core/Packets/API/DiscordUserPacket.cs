@@ -6,7 +6,8 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class DiscordUserPacket : ISnowflake
 	{
-		[DataMember(Name ="id", Order = 1)]
+		[JsonPropertyName("id")]
+		[DataMember(Name = "id", Order = 1)]
 		public ulong Id { get; set; }
 
 		[JsonPropertyName("username")]
@@ -33,7 +34,8 @@ namespace Senko.Discord.Packets
 [DataMember(Name = "email", Order = 7)]
 		public string Email { get; set; }
 
-		[DataMember(Name ="mfa_enabled", Order = 8)]
+		[JsonPropertyName("mfa_enabled")]
+		[DataMember(Name = "mfa_enabled", Order = 8)]
 		public bool MfaEnabled { get; set; }
 	}
 }

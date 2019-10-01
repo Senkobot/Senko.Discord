@@ -6,13 +6,16 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class DiscordReactionPacket
 	{
-		[DataMember(Name ="count", Order = 1)]
+		[JsonPropertyName("count")]
+		[DataMember(Name = "count", Order = 1)]
 		public int Count { get; set; }
 
-		[DataMember(Name ="me", Order = 2)]
+		[JsonPropertyName("me")]
+		[DataMember(Name = "me", Order = 2)]
 		public bool Me { get; set; }
 
-		[DataMember(Name ="emoji", Order = 3)]
+		[JsonPropertyName("emoji")]
+		[DataMember(Name = "emoji", Order = 3)]
 		public DiscordEmoji Emoji { get; set; }
 	}
 }

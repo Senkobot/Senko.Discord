@@ -7,72 +7,87 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class DiscordEmbed
 	{
-		[DataMember(Name ="title", Order = 1)]
+		[JsonPropertyName("title")]
+		[DataMember(Name = "title", Order = 1)]
 		public string Title { get; set; }
 
         [JsonPropertyName("description")]
         [DataMember(Name = "description", Order = 2)]
 		public string Description { get; set; }
 
-		[DataMember(Name ="color", Order = 3)]
-		public uint? Color { get; set; } = null;
+		[DataMember(Name = "color", Order = 3)]
+		public uint? Color { get; set; }
 
-		[DataMember(Name ="fields", Order = 4)]
+		[JsonPropertyName("fields")]
+		[DataMember(Name = "fields", Order = 4)]
 		public List<EmbedField> Fields { get; set; }
 
-		[DataMember(Name ="author", Order = 5)]
-		public EmbedAuthor Author;
+		[JsonPropertyName("author")]
+		[DataMember(Name = "author", Order = 5)]
+		public EmbedAuthor Author { get; set; }
 
-		[DataMember(Name ="footer", Order = 6)]
-		public EmbedFooter Footer;
+        [JsonPropertyName("footer")]
+		[DataMember(Name = "footer", Order = 6)]
+		public EmbedFooter Footer { get; set; }
 
-		[DataMember(Name ="thumbnail", Order = 7)]
-		public EmbedImage Thumbnail;
+        [JsonPropertyName("thumbnail")]
+		[DataMember(Name = "thumbnail", Order = 7)]
+		public EmbedImage Thumbnail { get; set; }
 
-		[DataMember(Name ="image", Order = 8)]
-		public EmbedImage Image;
-	}
+        [JsonPropertyName("image")]
+		[DataMember(Name = "image", Order = 8)]
+		public EmbedImage Image { get; set; }
+    }
 
     [DataContract]
     public class EmbedAuthor
 	{
-		[DataMember(Name ="name")]
+		[JsonPropertyName("name")]
+		[DataMember(Name = "name")]
 		public string Name { get; set; }
 
-		[DataMember(Name ="icon_url")]
+		[JsonPropertyName("icon_url")]
+		[DataMember(Name = "icon_url")]
 		public string IconUrl { get; set; }
 
-		[DataMember(Name ="url")]
+		[JsonPropertyName("url")]
+		[DataMember(Name = "url")]
 		public string Url { get; set; }
 	}
 
     [DataContract]
     public class EmbedFooter
 	{
-		[DataMember(Name ="icon_url")]
+		[JsonPropertyName("icon_url")]
+		[DataMember(Name = "icon_url")]
 		public string IconUrl { get; set; }
 
-		[DataMember(Name ="text")]
+		[JsonPropertyName("text")]
+		[DataMember(Name = "text")]
 		public string Text { get; set; }
 	}
 
     [DataContract]
     public class EmbedImage
 	{
-		[DataMember(Name ="url")]
+		[JsonPropertyName("url")]
+		[DataMember(Name = "url")]
 		public string Url { get; set; }
 	}
 
     [DataContract]
     public class EmbedField
 	{
-		[DataMember(Name ="name")]
+		[JsonPropertyName("name")]
+		[DataMember(Name = "name")]
 		public string Title { get; set; }
 
-		[DataMember(Name ="value")]
+		[JsonPropertyName("value")]
+		[DataMember(Name = "value")]
 		public string Content { get; set; }
 
-		[DataMember(Name ="inline")]
-		public bool Inline { get; set; } = false;
+		[JsonPropertyName("inline")]
+		[DataMember(Name = "inline")]
+		public bool Inline { get; set; }
 	}
 }

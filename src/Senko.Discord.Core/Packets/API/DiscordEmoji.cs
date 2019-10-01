@@ -25,10 +25,12 @@ namespace Senko.Discord.Packets
 [DataMember(Name = "user", Order = 4)]
 		public DiscordUserPacket Creator { get; set; }
 
-		[DataMember(Name ="require_colons", Order = 5)]
+		[JsonPropertyName("require_colons")]
+		[DataMember(Name = "require_colons", Order = 5)]
 		public bool? RequireColons { get; set; }
 
-		[DataMember(Name ="managed", Order = 6)]
+		[JsonPropertyName("managed")]
+		[DataMember(Name = "managed", Order = 6)]
 		public bool? Managed { get; set; }
 
 		[JsonPropertyName("animated")]

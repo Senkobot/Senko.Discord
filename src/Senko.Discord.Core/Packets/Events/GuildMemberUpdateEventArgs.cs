@@ -6,16 +6,20 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class GuildMemberUpdateEventArgs
 	{
-		[DataMember(Name ="guild_id", Order = 1)]
-		public ulong GuildId;
+		[JsonPropertyName("guild_id")]
+		[DataMember(Name = "guild_id", Order = 1)]
+		public ulong GuildId { get; set; }
 
-		[DataMember(Name ="roles", Order = 2)]
-		public ulong[] RoleIds;
+        [JsonPropertyName("roles")]
+		[DataMember(Name = "roles", Order = 2)]
+		public ulong[] RoleIds { get; set; }
 
-		[DataMember(Name ="user", Order = 3)]
-		public DiscordUserPacket User;
+        [JsonPropertyName("user")]
+		[DataMember(Name = "user", Order = 3)]
+		public DiscordUserPacket User { get; set; }
 
-		[DataMember(Name ="nick", Order = 4)]
-		public string Nickname;
-	}
+        [JsonPropertyName("nick")]
+		[DataMember(Name = "nick", Order = 4)]
+		public string Nickname { get; set; }
+    }
 }

@@ -7,16 +7,20 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class DiscordPresence : IDiscordPresence
 	{
-		[DataMember(Name ="game", Order = 1)]
+		[JsonPropertyName("game")]
+		[DataMember(Name = "game", Order = 1)]
 		public DiscordActivity Activity { get; private set; }
 
-		[DataMember(Name ="status", Order = 2)]
+		[JsonPropertyName("status")]
+		[DataMember(Name = "status", Order = 2)]
 		public UserStatus Status { get; private set; }
 
-		[DataMember(Name ="since", Order = 3)]
+		[JsonPropertyName("since")]
+		[DataMember(Name = "since", Order = 3)]
 		public long Since { get; private set; }
 
-		[DataMember(Name ="afk", Order = 4)]
+		[JsonPropertyName("afk")]
+		[DataMember(Name = "afk", Order = 4)]
 		public bool IsAFK { get; private set; }
 
 		public DiscordPresence()
