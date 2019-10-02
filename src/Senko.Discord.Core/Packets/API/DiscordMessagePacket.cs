@@ -10,7 +10,7 @@ namespace Senko.Discord.Packets
     public class DiscordMessagePacket
 	{
 		[JsonPropertyName("id")]
-[DataMember(Name = "id", Order = 1)]
+        [DataMember(Name = "id", Order = 1)]
 		public ulong Id { get; set; }
 
         [JsonPropertyName("channel_id")]
@@ -34,23 +34,23 @@ namespace Senko.Discord.Packets
 		public DiscordMessageType Type { get; set; }
 
 		[JsonPropertyName("content")]
-[DataMember(Name = "content", Order = 7)]
+        [DataMember(Name = "content", Order = 7)]
 		public string Content { get; set; }
 
 		[JsonPropertyName("timestamp")]
-[DataMember(Name = "timestamp", Order = 8)]
+        [DataMember(Name = "timestamp", Order = 8)]
 		public DateTimeOffset Timestamp { get; set; }
 
 		[JsonPropertyName("tts")]
-[DataMember(Name = "tts", Order = 9)]
+        [DataMember(Name = "tts", Order = 9)]
 		public bool IsTTS { get; set; }
 
 		[JsonPropertyName("mention_everyone")]
-[DataMember(Name = "mention_everyone", Order = 10)]
+        [DataMember(Name = "mention_everyone", Order = 10)]
 		public bool MentionsEveryone { get; set; }
 
 		[JsonPropertyName("mentions")]
-[DataMember(Name = "mentions", Order = 11)]
+        [DataMember(Name = "mentions", Order = 11)]
 		public List<DiscordUserPacket> Mentions { get; set; }
 
         [JsonPropertyName("attachments")]

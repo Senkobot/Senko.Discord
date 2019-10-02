@@ -15,7 +15,8 @@ namespace Senko.Discord.Packets
         [DataMember(Name = "description", Order = 2)]
 		public string Description { get; set; }
 
-		[DataMember(Name = "color", Order = 3)]
+        [JsonPropertyName("color")]
+        [DataMember(Name = "color", Order = 3)]
 		public uint? Color { get; set; }
 
 		[JsonPropertyName("fields")]
