@@ -5,25 +5,31 @@ namespace Senko.Discord.Gateway
 {
 	public class GatewayConnectionPacket
 	{
-		[DataMember(Name ="url")]
-		public string Url;
+		[JsonPropertyName("url")]
+		[DataMember(Name = "url")]
+		public string Url { get; set; }
 
-		[DataMember(Name ="shards")]
-		public int ShardCount;
+        [JsonPropertyName("shards")]
+		[DataMember(Name = "shards")]
+		public int ShardCount { get; set; }
 
-		[DataMember(Name ="session_start_limit")]
-		public GatewaySessionLimitsPacket SessionLimit;
-	}
+        [JsonPropertyName("session_start_limit")]
+		[DataMember(Name = "session_start_limit")]
+		public GatewaySessionLimitsPacket SessionLimit { get; set; }
+    }
 
 	public class GatewaySessionLimitsPacket
 	{
-		[DataMember(Name ="total")]
-		public int Total;
+		[JsonPropertyName("total")]
+		[DataMember(Name = "total")]
+		public int Total { get; set; }
 
-		[DataMember(Name ="remaining")]
-		public int Remaining;
+        [JsonPropertyName("remaining")]
+		[DataMember(Name = "remaining")]
+		public int Remaining { get; set; }
 
-		[DataMember(Name ="reset_after")]
-		public int ResetAfter;
-	}
+        [JsonPropertyName("reset_after")]
+		[DataMember(Name = "reset_after")]
+		public int ResetAfter { get; set; }
+    }
 }

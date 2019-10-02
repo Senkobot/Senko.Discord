@@ -13,25 +13,29 @@ namespace Senko.Discord.Packets
         /// <summary>
         /// Remaining amount of entities that can be sent on this route.
         /// </summary>
-		[DataMember(Order = 1)]
+        [JsonPropertyName("remaining")]
+        [DataMember(Order = 1)]
         public int Remaining { get; set; }
 
         /// <summary>
         /// Total limit of entities that can be sent until <see cref="Reset"/> occurs.
         /// </summary>
-		[DataMember(Order = 2)]
+        [JsonPropertyName("limit")]
+        [DataMember(Order = 2)]
         public int Limit { get; set; }
 
         /// <summary>
         /// Epoch until ratelimit resets values.
         /// </summary>
-		[DataMember(Order = 3)]
+        [JsonPropertyName("reset")]
+        [DataMember(Order = 3)]
         public long Reset { get; set; }
 
         /// <summary>
         /// An optional global value for a shared ratelimit value.
         /// </summary>
-		[DataMember(Order = 4)]
+        [JsonPropertyName("global")]
+        [DataMember(Order = 4)]
         public int? Global { get; set; }
 
         /// <summary>

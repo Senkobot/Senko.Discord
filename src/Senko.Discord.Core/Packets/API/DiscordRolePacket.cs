@@ -7,11 +7,11 @@ namespace Senko.Discord.Packets
     public class DiscordRolePacket : ISnowflake
 	{
 		[JsonPropertyName("id")]
-[DataMember(Name = "id", Order = 1)]
+        [DataMember(Name = "id", Order = 1)]
 		public ulong Id { get; set; }
 
 		[JsonPropertyName("name")]
-[DataMember(Name = "name", Order = 2)]
+        [DataMember(Name = "name", Order = 2)]
 		public string Name { get; set; }
 
         [JsonPropertyName("color")]

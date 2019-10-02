@@ -6,19 +6,24 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class CreateRoleArgs
 	{
-		[DataMember(Name ="name")]
-		public string Name;
+		[JsonPropertyName("name")]
+		[DataMember(Name = "name")]
+		public string Name { get; set; }
 
-		[DataMember(Name ="permissions")]
-		public GuildPermission? Permissions;
+        [JsonPropertyName("permissions")]
+		[DataMember(Name = "permissions")]
+		public GuildPermission? Permissions { get; set; }
 
-		[DataMember(Name ="color")]
-		public int? Color;
+        [JsonPropertyName("color")]
+		[DataMember(Name = "color")]
+		public int? Color { get; set; }
 
-		[DataMember(Name ="hoist")]
-		public bool? Hoisted;
+        [JsonPropertyName("hoist")]
+		[DataMember(Name = "hoist")]
+		public bool? Hoisted { get; set; }
 
-		[DataMember(Name ="mentionable")]
-		public bool? Mentionable;
-	}
+        [JsonPropertyName("mentionable")]
+		[DataMember(Name = "mentionable")]
+		public bool? Mentionable { get; set; }
+    }
 }

@@ -7,16 +7,20 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class PermissionOverwrite
 	{
-		[DataMember(Name ="id", Order = 1)]
+		[JsonPropertyName("id")]
+		[DataMember(Name = "id", Order = 1)]
 		public ulong Id { get; set; }
 
-		[DataMember(Name ="type", Order = 2)]
+		[JsonPropertyName("type")]
+		[DataMember(Name = "type", Order = 2)]
 		public string Type { get; set; }
 
-		[DataMember(Name ="allow", Order = 3)]
+		[JsonPropertyName("allow")]
+		[DataMember(Name = "allow", Order = 3)]
 		public GuildPermission AllowedPermissions { get; set; }
 
-		[DataMember(Name ="deny", Order = 4)]
+		[JsonPropertyName("deny")]
+		[DataMember(Name = "deny", Order = 4)]
 		public GuildPermission DeniedPermissions { get; set; }
 	}
 

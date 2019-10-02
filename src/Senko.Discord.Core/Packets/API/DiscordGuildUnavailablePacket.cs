@@ -6,11 +6,13 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class DiscordGuildUnavailablePacket
 	{
-		[DataMember(Name ="id", Order = 1)]
-		public ulong GuildId;
+		[JsonPropertyName("id")]
+		[DataMember(Name = "id", Order = 1)]
+		public ulong GuildId { get; set; }
 
-		[DataMember(Name ="unavailable", Order = 2)]
-		public bool? IsUnavailable;
+        [JsonPropertyName("unavailable")]
+		[DataMember(Name = "unavailable", Order = 2)]
+		public bool? IsUnavailable { get; set; }
 
 		/// <summary>
 		/// A converter method to avoid protocol buffer serialization complexion

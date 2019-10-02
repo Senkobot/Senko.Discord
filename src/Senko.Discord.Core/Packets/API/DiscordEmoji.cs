@@ -10,29 +10,31 @@ namespace Senko.Discord.Packets
     public class DiscordEmoji
 	{
 		[JsonPropertyName("id")]
-[DataMember(Name = "id", Order = 1)]
+        [DataMember(Name = "id", Order = 1)]
 		public ulong? Id { get; set; }
 
 		[JsonPropertyName("name")]
-[DataMember(Name = "name", Order = 2)]
+        [DataMember(Name = "name", Order = 2)]
 		public string Name { get; set; }
 
 		[JsonPropertyName("roles")]
-[DataMember(Name = "roles", Order = 3)]
+        [DataMember(Name = "roles", Order = 3)]
 		public List<ulong> WhitelistedRoles { get; set; }
 
 		[JsonPropertyName("user")]
-[DataMember(Name = "user", Order = 4)]
+        [DataMember(Name = "user", Order = 4)]
 		public DiscordUserPacket Creator { get; set; }
 
-		[DataMember(Name ="require_colons", Order = 5)]
+		[JsonPropertyName("require_colons")]
+		[DataMember(Name = "require_colons", Order = 5)]
 		public bool? RequireColons { get; set; }
 
-		[DataMember(Name ="managed", Order = 6)]
+		[JsonPropertyName("managed")]
+		[DataMember(Name = "managed", Order = 6)]
 		public bool? Managed { get; set; }
 
 		[JsonPropertyName("animated")]
-[DataMember(Name = "animated", Order = 7)]
+        [DataMember(Name = "animated", Order = 7)]
 		public bool? Animated { get; set; }
 
 		public static bool TryParse(string text, out DiscordEmoji emoji)

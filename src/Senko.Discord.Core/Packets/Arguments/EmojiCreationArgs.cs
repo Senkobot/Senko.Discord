@@ -10,7 +10,8 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class EmojiCreationArgs : EmojiModifyArgs
 	{
-		[DataMember(Name ="image")]
+		[JsonPropertyName("image")]
+		[DataMember(Name = "image")]
 		public Stream Image { get; private set; }
 
         public EmojiCreationArgs()

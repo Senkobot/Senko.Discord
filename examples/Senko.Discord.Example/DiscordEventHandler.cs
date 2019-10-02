@@ -20,9 +20,18 @@ namespace Senko.Discord.Example
 
         public async ValueTask OnMessageCreate(IDiscordMessage message)
         {
-            if (message.Content == "!ping")
+            switch (message.Content)
             {
-                await _client.SendMessageAsync(message.ChannelId, "Pong");
+                case "!ping":
+                    await _client.SendMessageAsync(message.ChannelId, "Pong");
+                    break;
+                case "!embed":
+                    await _client.SendMessageAsync(message.ChannelId, null, new DiscordEmbed
+                    {
+                        Title = "Example",
+                        Description = "Example embed"
+                    });
+                    break;
             }
         }
 

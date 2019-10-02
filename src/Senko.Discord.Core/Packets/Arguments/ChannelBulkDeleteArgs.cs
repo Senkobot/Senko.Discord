@@ -7,7 +7,8 @@ namespace Senko.Discord.Packets
     [DataContract]
     public class ChannelBulkDeleteArgs
 	{
-		[DataMember(Name ="messages")]
+		[JsonPropertyName("messages")]
+		[DataMember(Name = "messages")]
 		public ulong[] Messages { get; set; }
 
         public ChannelBulkDeleteArgs()
