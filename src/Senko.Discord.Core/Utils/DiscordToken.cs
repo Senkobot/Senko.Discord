@@ -1,26 +1,33 @@
-﻿namespace Senko.Discord
+﻿using System;
+
+namespace Senko.Discord
 {
     public struct DiscordToken
     {
-        public DiscordToken(string tokenSource)
+        public DiscordToken(string token)
         {
-            if (tokenSource
+            if (token == null)
+            {
+                throw new ArgumentNullException(nameof(token));
+            }
+
+            if (token
                 .ToLowerInvariant()
                 .StartsWith("bearer "))
             {
-                Token = tokenSource.Substring(7);
+                Token = token.Substring(7);
                 Type = TokenType.BEARER;
             }
-            else if (tokenSource
+            else if (token
                 .ToLowerInvariant()
                 .StartsWith("bot "))
             {
-                Token = tokenSource.Substring(4);
+                Token = token.Substring(4);
                 Type = TokenType.BOT;
             }
             else
             {
-                Token = tokenSource;
+                Token = token;
                 Type = TokenType.BOT;
             }
         }

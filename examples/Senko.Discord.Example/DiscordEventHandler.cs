@@ -117,11 +117,6 @@ namespace Senko.Discord.Example
             return default;
         }
 
-        public ValueTask OnMessageDeleted(ulong? guildId, ulong channelId, ulong messageId)
-        {
-            return default;
-        }
-
         public ValueTask OnMessageEmojiCreated(ulong? guildId, ulong channelId, ulong messageId, DiscordEmoji emoji)
         {
             return default;

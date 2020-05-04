@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using Foundatio.Caching;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Senko.Discord.Gateway;
 
 namespace Senko.Discord.Example
 {
@@ -33,6 +34,7 @@ namespace Senko.Discord.Example
             services.AddDiscord(options =>
             {
                 options.Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
+                options.Intents = GatewayIntent.GuildMessages;
             });
 
             services.AddLogging(builder =>

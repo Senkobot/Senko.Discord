@@ -385,7 +385,8 @@ namespace Senko.Discord.Gateway.Connection
                 Compressed = _configuration.EnableCompression,
                 Token = _configuration.Token,
                 LargeThreshold = 250,
-                Shard = new[] { _shardId, _configuration.ShardAmount }
+                Shard = new[] { _shardId, _configuration.ShardAmount },
+                Intents = _configuration.Intents
             };
 
             var canIdentify = await _ratelimiter.CanIdentifyAsync()
