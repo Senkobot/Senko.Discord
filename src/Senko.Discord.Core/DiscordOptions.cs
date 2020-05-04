@@ -1,4 +1,6 @@
-﻿namespace Senko.Discord
+﻿using Senko.Discord.Gateway;
+
+namespace Senko.Discord
 {
     public class DiscordOptions
     {
@@ -21,5 +23,10 @@
         /// Total shards running on this token
         /// </summary>
 		public int ShardAmount { get; set; } = 1;
-	}
+
+        /// <summary>
+        /// The enabled intents.
+        /// </summary>
+        public GatewayIntent? Intents { get; set; }
+    }
 }

@@ -79,7 +79,8 @@ namespace Senko.Discord.Gateway
                             EnableCompression = _options.EnableCompression,
                             ShardAmount = _options.ShardAmount,
                             Token = _options.Token,
-                            Version = _options.Version
+                            Version = _options.Version,
+                            Intents = _options.Intents
                         };
 
                         _shards[i] = new GatewayShard(shardProperties, _provider, i);

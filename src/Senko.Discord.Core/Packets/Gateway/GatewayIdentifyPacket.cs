@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Runtime.Serialization;
 using System.Text.Json.Serialization;
+using Senko.Discord.Gateway;
 
 namespace Senko.Discord.Packets
 {
@@ -30,6 +31,10 @@ namespace Senko.Discord.Packets
         [JsonPropertyName("shard")]
         [DataMember(Name = "shard", Order = 6)]
         public int[] Shard { get; set; }
+
+        [JsonPropertyName("intents")]
+        [DataMember(Name = "intents", Order = 7)]
+        public GatewayIntent? Intents { get; set; }
     }
 
     [DataContract]
