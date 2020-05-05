@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using Senko.Discord.Helpers;
 using Senko.Discord.Packets;
 
 namespace Senko.Discord.Internal
@@ -7,6 +8,7 @@ namespace Senko.Discord.Internal
     public class DiscordUser : IDiscordUser
     {
         private readonly DiscordUserPacket _user;
+        private string _normalizedUsername;
 
         protected readonly IDiscordClient Client;
 
@@ -18,6 +20,9 @@ namespace Senko.Discord.Internal
 
         public string Username
             => _user.Username;
+
+        public string NormalizedUsername
+            => _normalizedUsername ??= StringHelper.Normalize(Username);
 
         public string Discriminator
             => _user.Discriminator;

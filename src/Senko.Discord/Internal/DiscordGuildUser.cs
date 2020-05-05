@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Senko.Discord.Helpers;
 using Senko.Discord.Packets;
 
 namespace Senko.Discord.Internal
@@ -9,6 +10,7 @@ namespace Senko.Discord.Internal
 	public class DiscordGuildUser : DiscordUser, IDiscordGuildUser
 	{
 		private readonly DiscordGuildMemberPacket _packet;
+		private string _normalizedNickname;
 
 		public DiscordGuildUser(DiscordGuildMemberPacket packet, IDiscordClient client)
             : base(packet.User, client)
@@ -18,6 +20,9 @@ namespace Senko.Discord.Internal
 
 		public string Nickname
 			=> _packet.Nickname;
+
+		public string NormalizedNickname
+			=> _normalizedNickname ??= StringHelper.Normalize(Nickname);
 
 		public IReadOnlyCollection<ulong> RoleIds
 			=> _packet.Roles;

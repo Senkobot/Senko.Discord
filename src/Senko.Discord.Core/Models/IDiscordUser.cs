@@ -14,6 +14,8 @@ namespace Senko.Discord
 
 		string Username { get; }
 
+		string NormalizedUsername { get; }
+
 		string Discriminator { get; }
 
 		DateTimeOffset CreatedAt { get; }
