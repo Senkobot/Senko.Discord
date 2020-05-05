@@ -34,7 +34,10 @@ namespace Senko.Discord.Example
             services.AddDiscord(options =>
             {
                 options.Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
-                options.Intents = GatewayIntent.GuildMessages;
+                options.Intents = GatewayIntent.Guilds
+                                  | GatewayIntent.DirectMessages
+                                  | GatewayIntent.GuildMessages
+                                  | GatewayIntent.GuildVoiceStates;
             });
 
             services.AddLogging(builder =>
