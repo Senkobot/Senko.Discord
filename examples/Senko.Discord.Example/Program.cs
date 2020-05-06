@@ -29,13 +29,14 @@ namespace Senko.Discord.Example
             var services = new ServiceCollection();
 
             services.AddSingleton<ICacheClient, InMemoryCacheClient>();
-            services.AddSingleton<IDiscordEventHandler, DiscordEventHandler>();
 
             services.AddDiscord(options =>
             {
                 options.Token = Environment.GetEnvironmentVariable("DISCORD_TOKEN");
-                options.Intents = GatewayIntent.GuildMessages;
+                options.Intents = GatewayIntent.GuildMessages | GatewayIntent.GuildMembers;
             });
+
+            services.AddDiscordGateway<DiscordEventHandler>();
 
             services.AddLogging(builder =>
             {

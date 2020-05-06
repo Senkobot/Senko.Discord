@@ -162,15 +162,12 @@ namespace Senko.Discord.Rest.Http
 
 		public async ValueTask<HttpResponse> SendAsync(HttpRequestMessage message)
 		{
-			if(_rateLimiter != null)
+			if (_rateLimiter != null)
 			{
-				if(!await _rateLimiter.CanStartRequestAsync(
-                    message.Method.Method, 
+				await _rateLimiter.WaitAsync(
+					message.Method.Method,
 					message.RequestUri.ToString()
-				))
-				{
-					throw new RateLimitException(message.RequestUri);
-				}
+				);
 			}
 
 			var response = await _client.SendAsync(message);

@@ -24,7 +24,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Senko.Discord.Core\Senko.Discord.Core.csproj" />
-    <ProjectReference Include="..\Senko.Discord.Gateway\Senko.Discord.Gateway.csproj" />
     <ProjectReference Include="..\Senko.Discord.Rest\Senko.Discord.Rest.csproj" />
   </ItemGroup>
 

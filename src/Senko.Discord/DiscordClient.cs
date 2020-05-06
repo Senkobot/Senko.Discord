@@ -10,16 +10,15 @@ using Senko.Discord.Rest;
 
 namespace Senko.Discord
 {
-    public partial class DiscordClient : BaseDiscordClient
+    public class DiscordClient : BaseDiscordClient
     {
         private readonly ILogger<DiscordClient> _logger;
 
         public DiscordClient(
             IDiscordApiClient apiClient,
-            IDiscordGateway gateway,
             ICacheClient cacheClient,
-            ILogger<DiscordClient> logger,
-            IServiceProvider provider
+            IDiscordGateway gateway = null,
+            ILogger<DiscordClient> logger = null
         )  : base(apiClient, gateway)
         {
             CacheClient = cacheClient;
@@ -70,6 +69,25 @@ namespace Senko.Discord
                     CacheClient.SetAllAsync(packets.ToDictionary(p => CacheKey.User(p.User.Id), p => p.User))
                 }
             );
+        }
+
+        public override async ValueTask<IEnumerable<IDiscordGuildMemberName>> GetGuildMemberNamesAsync(ulong guildId)
+        {
+            var cacheName = CacheKey.GuildMemberNameList(guildId);
+            var cache = await CacheClient.GetAsync<List<DiscordGuildMemberName>>(cacheName);
+
+            if (cache.HasValue)
+            {
+                return cache.Value;
+            }
+            
+            var names = (await GetGuildMembersPacketAsync(guildId))
+                .Select(x => new DiscordGuildMemberName(x))
+                .ToList();
+
+            await CacheClient.SetAsync(cacheName, names);
+
+            return names;
         }
 
         protected override ValueTask<DiscordChannelPacket[]> GetGuildChannelPacketsAsync(ulong guildId)
@@ -162,7 +180,7 @@ namespace Senko.Discord
                     return items.Values.Select(c => c.Value).ToArray();
                 }
 
-                _logger.LogDebug("Ignoring invalid cache (list, {Type})", typeof(T).Name);
+                _logger?.LogDebug("Ignoring invalid cache (list, {Type})", typeof(T).Name);
             }
 
             var packets = await retrieveFunc();
@@ -208,7 +226,7 @@ namespace Senko.Discord
                     return cache.Value;
                 }
 
-                _logger.LogDebug("Ignoring invalid cache ({Id}, {Type})", cache.Value.Id, typeof(T).Name);
+                _logger?.LogDebug("Ignoring invalid cache ({Id}, {Type})", cache.Value.Id, typeof(T).Name);
             }
 
             var packet = await retrieveFunc();

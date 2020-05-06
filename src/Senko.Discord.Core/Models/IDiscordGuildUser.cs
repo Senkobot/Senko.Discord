@@ -9,8 +9,6 @@ namespace Senko.Discord
 	{
 		string Nickname { get; }
 
-		string NormalizedNickname { get; }
-
 		IReadOnlyCollection<ulong> RoleIds { get; }
 
 		ulong GuildId { get; }

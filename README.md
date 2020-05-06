@@ -8,8 +8,7 @@ This project is a fork of [Miki.Discord](https://github.com/Mikibot/Miki.Discord
 - [Miki.Logging](https://github.com/Mikibot/Miki.Logging) has been replaced by [Microsoft.Extensions.Logging.Abstraction](https://github.com/aspnet/Extensions/tree/master/src/Logging).
 
 ## Project structure
-- **Senko.Discord**: Implementation of IDiscordClient.  
-  References Senko.Discord.Gateway and Senko.Discord.Rest to simplify the NuGet installation.
+- **Senko.Discord**: Implementation of IDiscordClient.
 - **Senko.Discord.Core**: Core classes and interfaces.
 - **Senko.Discord.Gateway**: Implementation of IDiscordGateway.
 - **Senko.Discord.Rest**: Implementation of IDiscordApiClient.

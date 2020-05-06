@@ -13,6 +13,8 @@ namespace Senko.Discord
 
         private const string GuildMemberPrefix = "discord:guild_member";
 
+        private const string GuildMemberNamesPrefix = "discord:guild_member_name";
+
         private const string GuildRolePrefix = "discord:guild_role";
 
         [DebuggerStepThrough, MethodImpl(MethodImplOptions.AggressiveInlining)]
@@ -43,6 +45,12 @@ namespace Senko.Discord
         public static string GuildMemberIdList(ulong guildId)
         {
             return $"{GuildMemberPrefix}:{guildId}:_ids";
+        }
+
+        [DebuggerStepThrough, MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static string GuildMemberNameList(ulong guildId)
+        {
+            return $"{GuildMemberNamesPrefix}:{guildId}:_ids";
         }
 
         [DebuggerStepThrough, MethodImpl(MethodImplOptions.AggressiveInlining)]

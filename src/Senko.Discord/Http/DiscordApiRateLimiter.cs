@@ -10,40 +10,53 @@ namespace Senko.Discord.Http
 {
     public class DiscordApiRateLimiter : IDiscordApiRateLimiter
     {
+        private const string LimitHeader = "X-RateLimit-Limit";
+        private const string RemainingHeader = "X-RateLimit-Remaining";
+        private const string ResetHeader = "X-RateLimit-Reset";
+        private const string GlobalHeader = "X-RateLimit-Global";
+        
         private readonly ICacheClient _cache;
 
-        const string LimitHeader = "X-RateLimit-Limit";
-        const string RemainingHeader = "X-RateLimit-Remaining";
-        const string ResetHeader = "X-RateLimit-Reset";
-        const string GlobalHeader = "X-RateLimit-Global";
-
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private string GetCacheKey(string route, string id)
-            => $"discord:ratelimit:{route}:{id}";
+        private static string GetCacheKey(string route, string id)
+        {
+            return $"discord:ratelimit:{route}:{id}";
+        }
 
         public DiscordApiRateLimiter(ICacheClient cache)
         {
             _cache = cache;
         }
 
-        public async ValueTask<bool> CanStartRequestAsync(string method, string requestUri)
+        public async ValueTask WaitAsync(string method, string requestUri)
         {
-            string key = GetCacheKey(requestUri.Split('/')[0], requestUri.Split('/')[1]);
+            var key = GetCacheKey(requestUri.Split('/')[0], requestUri.Split('/')[1]);
+            var (success, rateLimit) = await GetRateLimit(key);
 
+            while (success && rateLimit.IsRatelimited(out var result))
+            {
+                await Task.Delay(result.TimeOut * 1000);
+
+                (success, rateLimit) = await GetRateLimit(key);
+            }
+        }
+
+        public async ValueTask<(bool success, Ratelimit ratelimit)> GetRateLimit(string key)
+        {
             var cache = await _cache.GetAsync<Ratelimit>(key);
 
             if (!cache.HasValue)
             {
-                return true;
+                return (false, default);
             }
 
             var rateLimit = cache.Value;
 
             rateLimit.Remaining--;
-
+            
             await _cache.SetAsync(key, rateLimit);
 
-            return !rateLimit.IsRatelimited();
+            return (true, rateLimit);
         }
 
         public ValueTask OnRequestSuccessAsync(HttpResponse response)

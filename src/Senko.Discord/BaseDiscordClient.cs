@@ -13,23 +13,17 @@ namespace Senko.Discord
 {
 	public abstract class BaseDiscordClient : IDiscordClient
     {
-        protected BaseDiscordClient(IDiscordApiClient apiClient, IDiscordGateway gateway)
+        protected BaseDiscordClient(IDiscordApiClient apiClient, IDiscordGateway gateway = null)
 		{
             ApiClient = apiClient;
 			Gateway = gateway;
         }
 
-        public IDiscordApiClient ApiClient { get; }
+        protected IDiscordApiClient ApiClient { get; }
 
-        public IDiscordGateway Gateway { get; }
+        protected IDiscordGateway Gateway { get; }
 
         public ulong? CurrentUserId { get; set; }
-
-        public ValueTask StartAsync()
-            => Gateway.StartAsync();
-
-        public ValueTask StopAsync()
-            => Gateway.StopAsync();
 
         protected abstract ValueTask<DiscordUserPacket> GetCurrentUserPacketAsync();
 
@@ -48,6 +42,16 @@ namespace Senko.Discord
         protected abstract ValueTask<DiscordRolePacket> GetRolePacketAsync(ulong roleId, ulong guildId);
 
         protected abstract ValueTask<DiscordChannelPacket> GetChannelPacketAsync(ulong id);
+
+        public ValueTask StartAsync()
+        {
+            return Gateway?.StartAsync() ?? default;
+        }
+
+        public ValueTask StopAsync()
+        {
+            return Gateway?.StopAsync() ?? default;
+        }
 
         public virtual async ValueTask<IDiscordMessage> EditMessageAsync(
 			ulong channelId, ulong messageId, EditMessageArgs message)
@@ -148,8 +152,7 @@ namespace Senko.Discord
             return ApiClient.ModifySelfAsync(args);
         }
 
-        public virtual async ValueTask<IDiscordTextChannel> CreateDMAsync(
-            ulong userid)
+        public virtual async ValueTask<IDiscordTextChannel> CreateDMAsync(ulong userid)
         {
             var channel = await ApiClient.CreateDMChannelAsync(userid);
 
@@ -259,6 +262,12 @@ namespace Senko.Discord
                 .Select(x => new DiscordGuildUser(x, this));
         }
 
+        public virtual async ValueTask<IEnumerable<IDiscordGuildMemberName>> GetGuildMemberNamesAsync(ulong guildId)
+        {
+            return (await GetGuildMembersPacketAsync(guildId))
+                .Select(x => new DiscordGuildMemberName(x));
+        }
+
         public virtual async ValueTask<IEnumerable<IDiscordUser>> GetReactionsAsync(ulong channelId, ulong messageId, DiscordEmoji emoji)
 		{
 			var users = await ApiClient.GetReactionsAsync(channelId, messageId, emoji);
@@ -283,9 +292,14 @@ namespace Senko.Discord
 			);
 		}
 
-		public virtual async ValueTask SetGameAsync(int shardId, DiscordStatus status)
+		public virtual ValueTask SetGameAsync(int shardId, DiscordStatus status)
 		{
-			await Gateway.SendAsync(shardId, GatewayOpcode.StatusUpdate, status);
+            if (Gateway == null)
+            {
+                throw new NotSupportedException("Could not set the game: the gateway is not registered");
+            }
+            
+			return Gateway.SendAsync(shardId, GatewayOpcode.StatusUpdate, status);
 		}
 
 		public virtual async ValueTask<IDiscordMessage> SendFileAsync(ulong channelId, Stream stream, string fileName, MessageArgs message = null)
