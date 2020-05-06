@@ -28,7 +28,7 @@ steps:
     arguments: '--configuration $(buildConfiguration)'
     publishTestResults: true
 
-- script: dotnet pack --configuration $(buildConfiguration) --no-build --output %Build_ArtifactStagingDirectory%
+- script: dotnet pack --configuration $(buildConfiguration) --no-build --output $(Build.ArtifactStagingDirectory)
   condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'develop'))
   displayName: pack
 
