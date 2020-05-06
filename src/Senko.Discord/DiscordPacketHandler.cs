@@ -496,7 +496,7 @@ namespace Senko.Discord
         private async Task AddName(DiscordGuildMemberPacket member)
         {
             var cacheName = CacheKey.GuildMemberNameList(member.GuildId);
-            var cache = await CacheClient.GetAsync<List<DiscordGuildMemberName>>(cacheName);
+            var cache = await CacheClient.GetAsync<List<DiscordGuildUserName>>(cacheName);
 
             if (!cache.HasValue)
             {
@@ -504,14 +504,14 @@ namespace Senko.Discord
             }
 
             var names = cache.Value;
-            names.Add(new DiscordGuildMemberName(member));
+            names.Add(new DiscordGuildUserName(member));
             await CacheClient.SetAsync(cacheName, names);
         }
 
         private async Task RemoveName(ulong guildId, ulong userId)
         {
             var cacheName = CacheKey.GuildMemberNameList(guildId);
-            var cache = await CacheClient.GetAsync<List<DiscordGuildMemberName>>(cacheName);
+            var cache = await CacheClient.GetAsync<List<DiscordGuildUserName>>(cacheName);
 
             if (!cache.HasValue)
             {
