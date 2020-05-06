@@ -27,5 +27,7 @@ namespace Senko.Discord
         ValueTask<IDiscordTextChannel> GetDMChannelAsync();
 
 		string GetAvatarUrl(ImageType type = ImageType.AUTO, ImageSize size = ImageSize.x256);
+
+		bool Matches(string name);
 	}
 }

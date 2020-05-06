@@ -63,5 +63,11 @@ namespace Senko.Discord.Internal
 
             return await Client.CreateDMAsync(Id);
         }
+
+        public virtual bool Matches(string name)
+        {
+            return Username.Contains(name, StringComparison.OrdinalIgnoreCase)
+                   || NormalizedUsername.Contains(name, StringComparison.OrdinalIgnoreCase);
+        }
     }
 }

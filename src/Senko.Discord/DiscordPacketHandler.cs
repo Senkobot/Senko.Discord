@@ -390,32 +390,37 @@ namespace Senko.Discord
 
         private ValueTask InsertGuildCacheAsync(DiscordGuildPacket guild)
         {
-            guild.Members.RemoveAll(x => x == null);
+            var tasks = new Task[]
+                {
+                    CacheClient.SetAsync(CacheKey.Guild(guild.Id), guild),
+                    CacheClient.SetAllAsync(guild.Members
+                        .GroupBy(u => u.User.Id)
+                        .ToDictionary(g => CacheKey.User(g.Key), g => g.First().User))
+                }
+                .Union(StoreListAsync(
+                    CacheKey.ChannelIdList(guild.Id),
+                    CacheKey.Channel,
+                    guild.Channels)
+                )
+                .Union(StoreListAsync(
+                    CacheKey.GuildRoleIdList(guild.Id),
+                    id => CacheKey.GuildRole(guild.Id, id),
+                    guild.Roles)
+                );
+            
+            // Never insert the guild members when the count is invalid.
+            if (guild.Members.RemoveAll(x => x?.User == null) == 0 
+                && guild.MemberCount.HasValue 
+                && guild.Members.Count == guild.MemberCount.Value)
+            {
+                tasks = tasks.Union(StoreListAsync(
+                    CacheKey.GuildMemberIdList(guild.Id),
+                    id => CacheKey.GuildMember(guild.Id, id),
+                    guild.Members)
+                );
+            }
 
-            return new ValueTask(Task.WhenAll(
-                new Task[]
-                    {
-                        CacheClient.SetAsync(CacheKey.Guild(guild.Id), guild),
-                        CacheClient.SetAllAsync(guild.Members
-                            .GroupBy(u => u.User.Id)
-                            .ToDictionary(g => CacheKey.User(g.Key), g => g.First().User))
-                    }
-                    .Union(StoreListAsync(
-                        CacheKey.ChannelIdList(guild.Id),
-                        CacheKey.Channel,
-                        guild.Channels)
-                    )
-                    .Union(StoreListAsync(
-                        CacheKey.GuildRoleIdList(guild.Id),
-                        id => CacheKey.GuildRole(guild.Id, id),
-                        guild.Roles)
-                    )
-                    .Union(StoreListAsync(
-                        CacheKey.GuildMemberIdList(guild.Id),
-                        id => CacheKey.GuildMember(guild.Id, id),
-                        guild.Members)
-                    )
-            ));
+            return new ValueTask(Task.WhenAll(tasks));
         }
 
         private ValueTask UpdateChannelCacheAsync(DiscordChannelPacket channel)

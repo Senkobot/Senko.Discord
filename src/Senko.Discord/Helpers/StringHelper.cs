@@ -65,7 +65,7 @@ namespace Senko.Discord.Helpers
                     var value = items[i];
                     var character = Characters[nextId++];
 
-                    if (!Database.ContainsKey(value))
+                    if (!Characters.Contains(value) && !Database.ContainsKey(value))
                     {
                         Database[value] = character;
                     }
@@ -75,6 +75,11 @@ namespace Senko.Discord.Helpers
 
         public static string Normalize(string input)
         {
+            if (string.IsNullOrEmpty(input))
+            {
+                return input;
+            }
+            
             var sb = new StringBuilder();
            
             foreach (var item in input.GetGraphemes())
