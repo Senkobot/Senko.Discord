@@ -2,9 +2,6 @@
 
 name: Senko.Discord
 
-pool:
-  vmImage: 'windows-latest'
-
 variables:
   buildConfiguration: 'Release'
 

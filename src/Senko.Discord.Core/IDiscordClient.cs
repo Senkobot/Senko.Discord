@@ -41,8 +41,10 @@ namespace Senko.Discord
 
         ValueTask<IEnumerable<IDiscordGuildUser>> GetGuildUsersAsync(ulong guildId);
 
-        ValueTask<IEnumerable<IDiscordGuildMemberName>> GetGuildMemberNamesAsync(ulong guildId);
+        IAsyncEnumerable<IDiscordGuildUser> GetGuildUsersAsync(ulong guildId, IEnumerable<ulong> userIds);
 
+        ValueTask<IEnumerable<IDiscordGuildUserName>> GetGuildMemberNamesAsync(ulong guildId);
+        
         ValueTask<IEnumerable<IDiscordUser>> GetReactionsAsync(ulong channelId, ulong messageId, DiscordEmoji emoji);
 
         ValueTask<IDiscordUser> GetUserAsync(ulong id);

@@ -1,6 +1,6 @@
 ﻿namespace Senko.Discord
 {
-    public interface IDiscordGuildMemberName : ISnowflake
+    public interface IDiscordGuildUserName : ISnowflake
     {
         string Username { get; }
         

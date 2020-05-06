@@ -18,7 +18,7 @@ namespace Senko.Discord.Tests
         [Fact]
         public void TestGuildUser()
         {
-            var specialUser = new DiscordGuildMemberName(new DiscordGuildMemberPacket
+            var specialUser = new DiscordGuildUserName(new DiscordGuildMemberPacket
             {
                 User = new DiscordUserPacket
                 {
@@ -33,7 +33,7 @@ namespace Senko.Discord.Tests
         [Fact]
         public void TestGuildUserWithNickname()
         {
-            var specialUser = new DiscordGuildMemberName(new DiscordGuildMemberPacket
+            var specialUser = new DiscordGuildUserName(new DiscordGuildMemberPacket
             {
                 Nickname = "𝔢𝔵𝔞𝔪𝔭𝔩𝔢",
                 User = new DiscordUserPacket
