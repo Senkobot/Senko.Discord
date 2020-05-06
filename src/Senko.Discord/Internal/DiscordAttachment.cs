@@ -1,12 +1,12 @@
 ﻿using Senko.Discord.Packets;
 
-namespace Senko.Discord.Internal
+namespace Senko.Discord
 {
-    internal class DiscordAttachment : IDiscordAttachment
+    public class DiscordAttachment : IDiscordAttachment
     {
-        readonly DiscordAttachmentPacket _packet;
+        private readonly DiscordAttachmentPacket _packet;
 
-        internal DiscordAttachment(DiscordAttachmentPacket packet)
+        public DiscordAttachment(DiscordAttachmentPacket packet)
         {
             _packet = packet;
         }

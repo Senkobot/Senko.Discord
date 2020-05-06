@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Threading.Tasks;
-using Senko.Discord.Helpers;
 using Senko.Discord.Packets;
 
-namespace Senko.Discord.Internal
+namespace Senko.Discord
 {
     public class DiscordUser : IDiscordUser
     {

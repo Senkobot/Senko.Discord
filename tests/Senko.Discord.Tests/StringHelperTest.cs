@@ -1,6 +1,5 @@
 using System;
 using Senko.Discord.Helpers;
-using Senko.Discord.Internal;
 using Senko.Discord.Packets;
 using Xunit;
 

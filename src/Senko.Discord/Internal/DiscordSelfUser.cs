@@ -2,9 +2,9 @@
 using System.Threading.Tasks;
 using Senko.Discord.Packets;
 
-namespace Senko.Discord.Internal
+namespace Senko.Discord
 {
-    class DiscordSelfUser : DiscordUser, IDiscordSelfUser
+    public class DiscordSelfUser : DiscordUser, IDiscordSelfUser
     {
         public DiscordSelfUser(DiscordUserPacket user, IDiscordClient client)
             : base(user, client)

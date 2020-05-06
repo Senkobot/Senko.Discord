@@ -1,17 +1,12 @@
-﻿using System;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Senko.Discord.Packets;
 
-namespace Senko.Discord.Internal
+namespace Senko.Discord
 {
 	public class DiscordChannel : IDiscordChannel
 	{
 		protected DiscordChannelPacket _packet;
 		protected IDiscordClient _client;
-
-		public DiscordChannel()
-		{
-		}
 
 		public DiscordChannel(DiscordChannelPacket packet, IDiscordClient client)
 		{

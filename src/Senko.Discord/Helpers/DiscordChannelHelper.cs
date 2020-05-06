@@ -1,5 +1,4 @@
-﻿using Senko.Discord.Internal;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 using Senko.Discord.Packets;
 using Senko.Discord.Rest;
 
