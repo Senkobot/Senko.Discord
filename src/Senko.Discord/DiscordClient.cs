@@ -70,10 +70,49 @@ namespace Senko.Discord
             );
         }
 
-        public override async ValueTask<IEnumerable<IDiscordGuildMemberName>> GetGuildMemberNamesAsync(ulong guildId)
+        private static ulong GetUserId(string key)
+        {
+            return ulong.Parse(key.Substring(key.LastIndexOf(':') + 1));
+        }
+
+        public override async IAsyncEnumerable<IDiscordGuildUser> GetGuildUsersAsync(ulong guildId, IEnumerable<ulong> userIds)
+        {
+            var keys = userIds.Select(id => CacheKey.GuildMember(guildId, id));
+            var result = await CacheClient.GetAllAsync<DiscordGuildMemberPacket>(keys);;
+
+            if (result.All(c => c.Value.HasValue))
+            {
+                foreach (var cacheItem in result.Values)
+                {
+                    yield return new DiscordGuildUser(cacheItem.Value, this);
+                }
+            }
+            else
+            {
+                foreach (var (userIdStr, cacheItem) in result)
+                {
+                    if (cacheItem.HasValue)
+                    {
+                        yield return new DiscordGuildUser(cacheItem.Value, this);
+                    }
+                    else
+                    {
+                        var userId = GetUserId(userIdStr);
+                        var packet = await GetGuildMemberPacketAsync(userId, guildId);
+
+                        if (packet != null)
+                        {
+                            yield return new DiscordGuildUser(packet, this);
+                        }
+                    }
+                }
+            }
+        }
+
+        public override async ValueTask<IEnumerable<IDiscordGuildUserName>> GetGuildMemberNamesAsync(ulong guildId)
         {
             var cacheName = CacheKey.GuildMemberNameList(guildId);
-            var cache = await CacheClient.GetAsync<List<DiscordGuildMemberName>>(cacheName);
+            var cache = await CacheClient.GetAsync<List<DiscordGuildUserName>>(cacheName);
 
             if (cache.HasValue)
             {
@@ -81,7 +120,7 @@ namespace Senko.Discord
             }
             
             var names = (await GetGuildMembersPacketAsync(guildId))
-                .Select(x => new DiscordGuildMemberName(x))
+                .Select(x => new DiscordGuildUserName(x))
                 .ToList();
 
             await CacheClient.SetAsync(cacheName, names);

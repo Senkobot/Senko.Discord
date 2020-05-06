@@ -7,13 +7,13 @@ using Senko.Discord.Packets;
 namespace Senko.Discord
 {
     [DataContract]
-    public class DiscordGuildMemberName : IDiscordGuildMemberName
+    public class DiscordGuildUserName : IDiscordGuildUserName
     {
-        public DiscordGuildMemberName()
+        public DiscordGuildUserName()
         {
         }
 
-        public DiscordGuildMemberName(DiscordGuildMemberPacket packet)
+        public DiscordGuildUserName(DiscordGuildMemberPacket packet)
         {
             Id = packet.User.Id;
             Username = packet.User.Username;

@@ -261,10 +261,23 @@ namespace Senko.Discord
                 .Select(x => new DiscordGuildUser(x, this));
         }
 
-        public virtual async ValueTask<IEnumerable<IDiscordGuildMemberName>> GetGuildMemberNamesAsync(ulong guildId)
+        public virtual async IAsyncEnumerable<IDiscordGuildUser> GetGuildUsersAsync(ulong guildId, IEnumerable<ulong> userIds)
+        {
+            foreach (var userId in userIds)
+            {
+                var packet = await GetGuildMemberPacketAsync(userId, guildId);
+
+                if (packet != null)
+                {
+                    yield return new DiscordGuildUser(packet, this);
+                }
+            }
+        }
+
+        public virtual async ValueTask<IEnumerable<IDiscordGuildUserName>> GetGuildMemberNamesAsync(ulong guildId)
         {
             return (await GetGuildMembersPacketAsync(guildId))
-                .Select(x => new DiscordGuildMemberName(x));
+                .Select(x => new DiscordGuildUserName(x));
         }
 
         public virtual async ValueTask<IEnumerable<IDiscordUser>> GetReactionsAsync(ulong channelId, ulong messageId, DiscordEmoji emoji)
