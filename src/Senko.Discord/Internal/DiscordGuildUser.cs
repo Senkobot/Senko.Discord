@@ -75,5 +75,12 @@ namespace Senko.Discord.Internal
 				.Where(x => RoleIds.Contains(x.Id))
 				.Max(x => x.Position);
 		}
+
+		public override bool Matches(string name)
+		{
+			return Nickname != null 
+				&& (Nickname.Contains(name, StringComparison.OrdinalIgnoreCase) || NormalizedNickname.Contains(name, StringComparison.OrdinalIgnoreCase))
+				|| base.Matches(name);
+		}
 	}
 }

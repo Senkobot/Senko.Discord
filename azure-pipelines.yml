@@ -2,9 +2,6 @@
 
 name: Senko.Discord
 
-trigger:
-- develop
-
 pool:
   vmImage: 'windows-latest'
 
@@ -14,14 +11,22 @@ variables:
 steps:
 - task: DotNetCoreInstaller@1
   inputs:
-    version: '3.0.100'
+    version: '3.1.201'
   displayName: install .NET Core 3
 
 - script: dotnet restore
   displayName: dotnet restore
 
 - script: dotnet build --configuration $(buildConfiguration) --no-restore
-  displayName: build
+  displayName: dotnet build
+
+- task: DotNetCoreCLI@2
+  displayName: dotnet test
+  inputs:
+    command: test
+    projects: '**/*Tests/*.csproj'
+    arguments: '--configuration $(buildConfiguration)'
+    publishTestResults: true
 
 - script: dotnet pack --configuration $(buildConfiguration) --no-build --output %Build_ArtifactStagingDirectory%
   condition: and(succeeded(), eq(variables['Build.SourceBranchName'], 'develop'))
