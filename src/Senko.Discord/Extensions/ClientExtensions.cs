@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
-using Senko.Discord.Internal;
 using Senko.Discord.Packets;
 
 namespace Senko.Discord

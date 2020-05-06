@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 using Senko.Discord.Helpers;
 using Senko.Discord.Packets;
 
-namespace Senko.Discord.Internal
+namespace Senko.Discord
 {
     [DataContract]
     public class DiscordGuildMemberName : IDiscordGuildMemberName
@@ -20,6 +20,7 @@ namespace Senko.Discord.Internal
             NormalizedUsername = StringHelper.Normalize(packet.User.Username);
             Nickname = packet.Nickname;
             NormalizedNickname = StringHelper.Normalize(packet.Nickname);
+            Discriminator = packet.User.Discriminator;
         }
 
         [JsonPropertyName("id")]
@@ -41,6 +42,10 @@ namespace Senko.Discord.Internal
         [JsonPropertyName("normalized_nickname")]
         [DataMember(Name = "normalized_nickname", Order = 5)]
         public string NormalizedNickname { get; set; }
+
+        [JsonPropertyName("discriminator")]
+        [DataMember(Name = "discriminator", Order = 6)]
+        public string Discriminator { get; }
 
         public bool Matches(string name)
         {

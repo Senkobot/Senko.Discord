@@ -4,7 +4,6 @@ using System.Linq;
 using System.Threading.Tasks;
 using Foundatio.Caching;
 using Microsoft.Extensions.Logging;
-using Senko.Discord.Internal;
 using Senko.Discord.Packets;
 using Senko.Discord.Rest;
 

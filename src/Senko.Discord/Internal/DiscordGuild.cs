@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Senko.Discord.Packets;
 
-namespace Senko.Discord.Internal
+namespace Senko.Discord
 {
 	public class DiscordGuild : IDiscordGuild
 	{

@@ -1,12 +1,11 @@
-﻿using Senko.Discord.Helpers;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Senko.Discord.Packets;
 
-namespace Senko.Discord.Internal
+namespace Senko.Discord
 {
 	public class DiscordGuildTextChannel : DiscordGuildChannel, IDiscordGuildChannel, IDiscordTextChannel
 	{

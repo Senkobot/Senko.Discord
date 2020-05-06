@@ -1,5 +1,4 @@
 ﻿using Senko.Discord.Helpers;
-using Senko.Discord.Internal;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +8,7 @@ using Senko.Discord.Packets;
 
 namespace Senko.Discord
 {
-	internal class DiscordTextChannel : DiscordChannel, IDiscordTextChannel
+	public class DiscordTextChannel : DiscordChannel, IDiscordTextChannel
 	{
 		public DiscordTextChannel(DiscordChannelPacket packet, IDiscordClient client)
 			: base(packet, client)

@@ -5,7 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Foundatio.Caching;
 using Senko.Discord.Gateway;
-using Senko.Discord.Internal;
 using Senko.Discord.Packets;
 
 namespace Senko.Discord

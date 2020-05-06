@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Senko.Discord.Helpers;
 using Senko.Discord.Packets;
 
-namespace Senko.Discord.Internal
+namespace Senko.Discord
 {
 	public class DiscordGuildUser : DiscordUser, IDiscordGuildUser
 	{

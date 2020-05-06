@@ -9,5 +9,9 @@
         string Nickname { get; }
         
         string NormalizedNickname { get; }
+        
+        string Discriminator { get; }
+
+        bool Matches(string name);
     }
 }
