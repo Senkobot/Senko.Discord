@@ -10,7 +10,6 @@ namespace Senko.Discord.Internal
 	public class DiscordGuildUser : DiscordUser, IDiscordGuildUser
 	{
 		private readonly DiscordGuildMemberPacket _packet;
-		private string _normalizedNickname;
 
 		public DiscordGuildUser(DiscordGuildMemberPacket packet, IDiscordClient client)
             : base(packet.User, client)
@@ -20,9 +19,6 @@ namespace Senko.Discord.Internal
 
 		public string Nickname
 			=> _packet.Nickname;
-
-		public string NormalizedNickname
-			=> _normalizedNickname ??= StringHelper.Normalize(Nickname);
 
 		public IReadOnlyCollection<ulong> RoleIds
 			=> _packet.Roles;
@@ -74,13 +70,6 @@ namespace Senko.Discord.Internal
             return (await guild.GetRolesAsync())
 				.Where(x => RoleIds.Contains(x.Id))
 				.Max(x => x.Position);
-		}
-
-		public override bool Matches(string name)
-		{
-			return Nickname != null 
-				&& (Nickname.Contains(name, StringComparison.OrdinalIgnoreCase) || NormalizedNickname.Contains(name, StringComparison.OrdinalIgnoreCase))
-				|| base.Matches(name);
 		}
 	}
 }

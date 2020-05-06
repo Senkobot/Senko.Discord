@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Senko.Discord.Packets;
+using Senko.Discord.Rest;
 
 namespace Senko.Discord
 {
@@ -39,6 +40,8 @@ namespace Senko.Discord
         ValueTask<IDiscordGuildUser> GetGuildUserAsync(ulong id, ulong guildId);
 
         ValueTask<IEnumerable<IDiscordGuildUser>> GetGuildUsersAsync(ulong guildId);
+
+        ValueTask<IEnumerable<IDiscordGuildMemberName>> GetGuildMemberNamesAsync(ulong guildId);
 
         ValueTask<IEnumerable<IDiscordUser>> GetReactionsAsync(ulong channelId, ulong messageId, DiscordEmoji emoji);
 

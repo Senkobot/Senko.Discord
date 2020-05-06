@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Foundatio.Caching;
@@ -22,9 +23,14 @@ namespace Senko.Discord.Example
         {
             switch (message.Content)
             {
+                // Command !ping
+                // Replies with the message "Pong".
                 case "!ping":
                     await _client.SendMessageAsync(message.ChannelId, "Pong");
                     break;
+                
+                // Command !embed
+                // Replies with a example embed.
                 case "!embed":
                     await _client.SendMessageAsync(message.ChannelId, null, new DiscordEmbed
                     {
@@ -32,6 +38,28 @@ namespace Senko.Discord.Example
                         Description = "Example embed"
                     });
                     break;
+                
+                // Command !users
+                // Show all users of the guild with their normalized name.
+                case "!users" when message.GuildId.HasValue:
+                {
+                    var memberNames = (await _client.GetGuildMemberNamesAsync(message.GuildId.Value))
+                        .Select(n => $"- {n.Nickname ?? n.Username} ({n.NormalizedNickname ?? n.NormalizedUsername})");
+                    var response = string.Join("\n", memberNames);
+                    
+                    await _client.SendMessageAsync(message.ChannelId, response);
+                    break;
+                }
+                
+                // Command !spam
+                case "!spam" when message.GuildId.HasValue:
+                {
+                    for (var i = 0; i < 10; i++)
+                    {
+                        await _client.SendMessageAsync(message.ChannelId, $"Message {i}");
+                    }
+                    break;
+                }
             }
         }
 

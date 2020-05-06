@@ -4,7 +4,7 @@ using System.Text.Json.Serialization;
 
 namespace Senko.Discord.Packets
 {
-    /// <summary>
+	/// <summary>
     /// General ratelimit struct used to verify ratelimits and block potentially ratelimited requests.
     /// </summary>
 	[DataContract]
@@ -42,18 +42,31 @@ namespace Senko.Discord.Packets
         /// Checks if the current ratelimit is valid and/or is expired.
         /// </summary>
         /// <returns>Whether the current instance is being ratelimited</returns>
-		public bool IsRatelimited()
-            => IsRatelimited(this);
+        /// <param name="result">Information about the ratelimit</param>
+		public bool IsRatelimited(out RatelimitResult result)
+        {
+	        return IsRatelimited(this, out result);
+        }
 
         /// <summary>
         /// Checks if the ratelimit is valid and/or is expired.
         /// </summary>
         /// <param name="rl">The instance that is being checked.</param>
+        /// <param name="result">Information about the ratelimit</param>
         /// <returns>Whether the instance is being ratelimited</returns>
-        public static bool IsRatelimited(Ratelimit rl)
-		{
-			return (rl.Global <= 0 || rl.Remaining <= 0)
-			    && DateTime.UtcNow <= DateTimeOffset.FromUnixTimeSeconds(rl.Reset);
+        public static bool IsRatelimited(Ratelimit rl, out RatelimitResult result)
+        {
+	        var now = DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+			
+			if ((rl.Global <= 0 || rl.Remaining <= 0)
+			    && now < rl.Reset)
+			{
+				result = new RatelimitResult((int)(rl.Reset - now));
+				return true;
+			}
+
+			result = default;
+			return false;
 		}
 	}
 }

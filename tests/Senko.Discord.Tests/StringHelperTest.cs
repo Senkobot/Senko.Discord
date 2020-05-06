@@ -17,27 +17,15 @@ namespace Senko.Discord.Tests
         }
         
         [Fact]
-        public void TestUser()
-        {
-            var specialUser = new DiscordUser(new DiscordUserPacket
-            {
-                Username = "𝔢𝔵𝔞𝔪𝔭𝔩𝔢"
-            }, null);
-            
-            Assert.True(specialUser.Matches("𝔢𝔵𝔞𝔪𝔭𝔩𝔢"));
-            Assert.True(specialUser.Matches("example"));
-        }
-        
-        [Fact]
         public void TestGuildUser()
         {
-            var specialUser = new DiscordGuildUser(new DiscordGuildMemberPacket
+            var specialUser = new DiscordGuildMemberName(new DiscordGuildMemberPacket
             {
                 User = new DiscordUserPacket
                 {
                     Username = "𝔢𝔵𝔞𝔪𝔭𝔩𝔢"
                 }
-            }, null);
+            });
             
             Assert.True(specialUser.Matches("𝔢𝔵𝔞𝔪𝔭𝔩𝔢"));
             Assert.True(specialUser.Matches("example"));
@@ -46,14 +34,14 @@ namespace Senko.Discord.Tests
         [Fact]
         public void TestGuildUserWithNickname()
         {
-            var specialUser = new DiscordGuildUser(new DiscordGuildMemberPacket
+            var specialUser = new DiscordGuildMemberName(new DiscordGuildMemberPacket
             {
                 Nickname = "𝔢𝔵𝔞𝔪𝔭𝔩𝔢",
                 User = new DiscordUserPacket
                 {
                     Username = "user"
                 }
-            }, null);
+            });
             
             Assert.True(specialUser.Matches("𝔢𝔵𝔞𝔪𝔭𝔩𝔢"));
             Assert.True(specialUser.Matches("example"));

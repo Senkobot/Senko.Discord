@@ -353,22 +353,26 @@ namespace Senko.Discord
             return cacheMember;
         }
 
-        private ValueTask InsertGuildMemberCacheAsync(DiscordGuildMemberPacket member)
+        private async ValueTask InsertGuildMemberCacheAsync(DiscordGuildMemberPacket member)
         {
-            return AddAsync(
+            await AddAsync(
                 CacheKey.GuildMemberIdList(member.GuildId),
                 CacheKey.GuildMember(member.GuildId, member.User.Id),
                 member
             );
+
+            await AddName(member);
         }
 
-        private ValueTask DeleteGuildMemberCacheAsync(ulong guildId, DiscordUserPacket user)
+        private async ValueTask DeleteGuildMemberCacheAsync(ulong guildId, DiscordUserPacket user)
         {
-            return RemoveAsync(
+            await RemoveAsync(
                 CacheKey.GuildMemberIdList(guildId),
                 CacheKey.GuildMember(guildId, user.Id),
                 user.Id
             );
+
+            await RemoveName(guildId, user.Id);
         }
 
         private ValueTask DeleteGuildCacheAsync(DiscordGuildUnavailablePacket unavailableGuild)
@@ -488,6 +492,39 @@ namespace Senko.Discord
             }
 
             await CacheClient.RemoveAsync(cacheName);
+        }
+
+        private async Task AddName(DiscordGuildMemberPacket member)
+        {
+            var cacheName = CacheKey.GuildMemberNameList(member.GuildId);
+            var cache = await CacheClient.GetAsync<List<DiscordGuildMemberName>>(cacheName);
+
+            if (!cache.HasValue)
+            {
+                return;
+            }
+
+            var names = cache.Value;
+            names.Add(new DiscordGuildMemberName(member));
+            await CacheClient.SetAsync(cacheName, names);
+        }
+
+        private async Task RemoveName(ulong guildId, ulong userId)
+        {
+            var cacheName = CacheKey.GuildMemberNameList(guildId);
+            var cache = await CacheClient.GetAsync<List<DiscordGuildMemberName>>(cacheName);
+
+            if (!cache.HasValue)
+            {
+                return;
+            }
+
+            var names = cache.Value;
+
+            if (names.RemoveAll(n => n.Id == userId) > 0)
+            {
+                await CacheClient.SetAsync(cacheName, names);
+            }
         }
     }
 }

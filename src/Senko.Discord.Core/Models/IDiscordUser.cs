@@ -14,8 +14,6 @@ namespace Senko.Discord
 
 		string Username { get; }
 
-		string NormalizedUsername { get; }
-
 		string Discriminator { get; }
 
 		DateTimeOffset CreatedAt { get; }
@@ -27,7 +25,5 @@ namespace Senko.Discord
         ValueTask<IDiscordTextChannel> GetDMChannelAsync();
 
 		string GetAvatarUrl(ImageType type = ImageType.AUTO, ImageSize size = ImageSize.x256);
-
-		bool Matches(string name);
 	}
 }

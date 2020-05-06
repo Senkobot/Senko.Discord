@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\Senko.Discord.Gateway\Senko.Discord.Gateway.csproj" />
     <ProjectReference Include="..\..\src\Senko.Discord\Senko.Discord.csproj" />
   </ItemGroup>
 
