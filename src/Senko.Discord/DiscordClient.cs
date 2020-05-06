@@ -70,34 +70,31 @@ namespace Senko.Discord
             );
         }
 
-        private static ulong GetUserId(string key)
-        {
-            return ulong.Parse(key.Substring(key.LastIndexOf(':') + 1));
-        }
-
         public override async IAsyncEnumerable<IDiscordGuildUser> GetGuildUsersAsync(ulong guildId, IEnumerable<ulong> userIds)
         {
-            var keys = userIds.Select(id => CacheKey.GuildMember(guildId, id));
-            var result = await CacheClient.GetAllAsync<DiscordGuildMemberPacket>(keys);;
+            var keys = userIds
+                .Select(id => (id, key: CacheKey.GuildMember(guildId, id)))
+                .ToList();
+            
+            var cacheItems = await CacheClient.GetAllAsync<DiscordGuildMemberPacket>(keys.Select(k => k.key));
 
-            if (result.All(c => c.Value.HasValue))
+            if (cacheItems.All(c => c.Value.HasValue))
             {
-                foreach (var cacheItem in result.Values)
+                foreach (var cacheItem in cacheItems.Values)
                 {
                     yield return new DiscordGuildUser(cacheItem.Value, this);
                 }
             }
             else
             {
-                foreach (var (userIdStr, cacheItem) in result)
+                foreach (var (userId, key) in keys)
                 {
-                    if (cacheItem.HasValue)
+                    if (cacheItems.TryGetValue(key, out var cacheItem) && cacheItem.HasValue)
                     {
                         yield return new DiscordGuildUser(cacheItem.Value, this);
                     }
                     else
                     {
-                        var userId = GetUserId(userIdStr);
                         var packet = await GetGuildMemberPacketAsync(userId, guildId);
 
                         if (packet != null)
