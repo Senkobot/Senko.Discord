@@ -342,6 +342,7 @@ namespace Senko.Discord
             cacheMember.Roles = member.RoleIds.ToList();
             cacheMember.Nickname = member.Nickname;
 
+            await UpdateNameAsync(member);
             await CacheClient.SetAsync(key, cacheMember);
 
             if (rolesEdited)
@@ -506,6 +507,38 @@ namespace Senko.Discord
             var names = cache.Value;
             names.Add(new DiscordGuildUserName(member));
             await CacheClient.SetAsync(cacheName, names);
+        }
+
+        private async ValueTask UpdateNameAsync(GuildMemberUpdateEventArgs member)
+        {
+            var key = CacheKey.GuildMemberNameList(member.GuildId);
+            var cache = await CacheClient.GetAsync<List<DiscordGuildUserName>>(key);
+
+            if (!cache.HasValue)
+            {
+                return;
+            }
+
+            var names = cache.Value;
+            var entry = names.FirstOrDefault(n => n.Id == member.User.Id);
+
+            if (entry == null)
+            {
+                names.Add(new DiscordGuildUserName(member.User, member.Nickname));
+            }
+            else if (entry.Nickname == member.Nickname 
+                     && entry.Username == member.User.Username
+                     && entry.Discriminator == member.User.Discriminator)
+            {
+                return;
+            }
+            else
+            {
+                entry.Update(member.User, member.Nickname);
+            }
+
+
+            await CacheClient.SetAsync(key, names);
         }
 
         private async Task RemoveName(ulong guildId, ulong userId)

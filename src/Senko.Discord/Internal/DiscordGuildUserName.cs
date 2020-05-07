@@ -15,12 +15,12 @@ namespace Senko.Discord
 
         public DiscordGuildUserName(DiscordGuildMemberPacket packet)
         {
-            Id = packet.User.Id;
-            Username = packet.User.Username;
-            NormalizedUsername = StringHelper.Normalize(packet.User.Username);
-            Nickname = packet.Nickname;
-            NormalizedNickname = StringHelper.Normalize(packet.Nickname);
-            Discriminator = packet.User.Discriminator;
+            Update(packet.User, packet.Nickname);
+        }
+
+        public DiscordGuildUserName(DiscordUserPacket packet, string nickname)
+        {
+            Update(packet, nickname);
         }
 
         [JsonPropertyName("id")]
@@ -45,7 +45,17 @@ namespace Senko.Discord
 
         [JsonPropertyName("discriminator")]
         [DataMember(Name = "discriminator", Order = 6)]
-        public string Discriminator { get; }
+        public string Discriminator { get; set; }
+
+        public void Update(DiscordUserPacket packet, string nickname)
+        {
+            Id = packet.Id;
+            Username = packet.Username;
+            NormalizedUsername = StringHelper.Normalize(packet.Username);
+            Nickname = Nickname;
+            NormalizedNickname = StringHelper.Normalize(nickname);
+            Discriminator = packet.Discriminator;
+        }
 
         public bool Matches(string name)
         {
